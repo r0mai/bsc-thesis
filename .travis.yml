@@ -1,0 +1,10 @@
+dist: xenial
+language: cpp
+
+addons:
+  apt:
+    packages:
+    - texlive-full
+
+script:
+    - pdflatex thesis.tex
