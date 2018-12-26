@@ -26,4 +26,5 @@ thesis = custom_target('Thesis pdf',
 		depend_files: [
 			files([
 				'img/elte_logo.eps',
-				'tex/titlepage.tex'])])
+				'tex/titlepage.tex',
+				'tex/introduction.tex'])])
