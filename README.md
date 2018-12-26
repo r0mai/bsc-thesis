@@ -1,4 +1,4 @@
-# bsc-thesis
+# bsc-thesis [![Build Status](https://travis-ci.org/matthiasvegh/bsc-thesis.svg?branch=master)](https://travis-ci.org/matthiasvegh/bsc-thesis)
 
 This repository contains my Bachelor's Thesis.
 
