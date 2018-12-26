@@ -19,10 +19,6 @@ addons:
 
 before_script:
   - export PATH=$HOME/.local/bin:$PATH
-  - which -a llvm-config
-  - which -a llvm-config-7
-  - /usr/bin/llvm-config --cxxflags
-  - /usr/bin/llvm-config-7 --cxxflags
   - pip3 install --user --upgrade pip
   - pip3 install --user meson ninja
 
