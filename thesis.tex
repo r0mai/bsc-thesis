@@ -4,6 +4,8 @@
 \usepackage{setspace}
 \usepackage{graphicx}
 \usepackage{titling}
+\usepackage{xparse}
+\usepackage{relsize}
 
 \frenchspacing
 \onehalfspacing
@@ -15,7 +17,11 @@
 \newcommand*{\faculty}[1]{\def\thefaculty{#1}}
 \newcommand*{\department}[1]{\def\thedepartment{#1}}
 
-\title{Clang-based Variable Name Suggestions for C++}
+\NewDocumentCommand{\CC}{m}{C\raisebox{.4ex}{\relsize{-3}{\textbf{++}}}}
+
+
+
+\title{Clang-based Variable Name Suggestions for \CC{}}
 \author{Végh Mátyás}
 \degree{Computer Science BSc}
 \university{Eötvös Loránd University}
