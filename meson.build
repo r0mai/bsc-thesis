@@ -4,8 +4,13 @@ project('dump-names', 'cpp',
 llvm_dependency = dependency('llvm')
 boost_dependency = dependency('boost')
 
+include_directory = include_directories('include')
+
 dump_names = shared_module('dump_names',
 		'src/plugin.cpp',
+		'src/AstAction.cpp',
+		'src/AstConsumer.cpp',
+		include_directories: include_directory,
 		cpp_args: ['-fno-exceptions', '-fno-rtti'],
 		dependencies: [boost_dependency, llvm_dependency])
 
