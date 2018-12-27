@@ -11,6 +11,7 @@ addons:
       - python3-pip
       - python3-setuptools
       - libclang-7-dev
+      - clang-7
       - llvm-7
       - llvm-7-dev
       - libboost-all-dev
@@ -19,6 +20,9 @@ addons:
 
 before_script:
   - export PATH=$HOME/.local/bin:$PATH
+  - mkdir -p $HOME/.local/bin
+  - ln -s /usr/bin/clang++-7 $HOME/.local/bin/clang++
+  - ln -s /usr/bin/clang-7 $HOME/.local/bin/clang
   - pip3 install --user --upgrade pip
   - pip3 install --user --requirement requirements.txt
 
