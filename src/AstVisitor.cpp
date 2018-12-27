@@ -30,7 +30,7 @@ bool dn::AstVisitor::VisitDecl(clang::Decl* decl) {
 void dn::AstVisitor::printVariableNames() const {
 	std::ofstream output{outputFile};
 	output << "{\n";
-	output << indent(4) << "TypeNames: {\n";
+	output << indent(4) << '"' << "TypeNames" << '"' << ": {\n";
 	for (const auto& typeNameCountPair: variableNames) {
 		const auto& type = typeNameCountPair.first;
 		output << indent(8) << '"' << type << '"' << ": {\n";
