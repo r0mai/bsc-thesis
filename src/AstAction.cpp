@@ -1,9 +1,9 @@
 #include <dn/AstAction.hpp>
 
 std::unique_ptr<clang::ASTConsumer> dn::TrivialAction::CreateASTConsumer(
-		clang::CompilerInstance&,
+		clang::CompilerInstance& ci,
 		llvm::StringRef) {
-	return std::make_unique<TrivialAstConsumer>();
+	return std::make_unique<TrivialAstConsumer>(ci);
 }
 
 bool dn::TrivialAction::ParseArgs(const clang::CompilerInstance&,
