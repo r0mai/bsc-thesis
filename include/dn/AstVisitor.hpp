@@ -17,8 +17,6 @@ public:
 
 	void printVariableNames() const;
 
-	std::string getNameStoreFilename() const;
-
 private:
 	std::string outputFile;
 	std::map<std::string, std::map<std::string, std::size_t>> variableNames;

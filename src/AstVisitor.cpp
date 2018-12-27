@@ -28,7 +28,7 @@ bool dn::AstVisitor::VisitDecl(clang::Decl* decl) {
 }
 
 void dn::AstVisitor::printVariableNames() const {
-	std::ofstream output{getNameStoreFilename()};
+	std::ofstream output{outputFile};
 	output << "{\n";
 	output << indent(4) << "TypeNames: {\n";
 	for (const auto& typeNameCountPair: variableNames) {
@@ -43,8 +43,4 @@ void dn::AstVisitor::printVariableNames() const {
 	}
 	output << indent(4) << "}\n";
 	output << "}\n";
-}
-
-std::string dn::AstVisitor::getNameStoreFilename() const {
-	return outputFile + ".names.json";
 }

@@ -3,7 +3,11 @@
 
 #include <clang/Frontend/FrontendAction.h>
 
+#include <boost/optional.hpp>
+
 #include "AstConsumer.hpp"
+
+#include <string>
 
 namespace dn {
 
@@ -17,6 +21,9 @@ public:
 			const std::vector<std::string>&) override;
 
 	clang::PluginASTAction::ActionType getActionType() override;
+
+private:
+	boost::optional<std::string> outputFilename;
 };
 
 
