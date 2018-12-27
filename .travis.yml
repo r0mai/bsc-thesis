@@ -25,3 +25,4 @@ before_script:
 script:
   - mkdir build && cd build && meson .. && cd ..
   - ninja -C build
+  - ninja -C build robot

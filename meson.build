@@ -17,6 +17,15 @@ dump_names = shared_module('dump_names',
 			'-Wno-comment'],
 		dependencies: [boost_dependency, llvm_dependency])
 
+robot_dump_names = meson.source_root() / 'test' / 'robot' / 'dump-names'
+
+run_target('robot',
+		command: [
+				find_program('robot'),
+				'-P',
+				robot_dump_names,
+				robot_dump_names])
+
 tex_vcs_tag = vcs_tag(
 		command: ['git', 'rev-parse', '--short', 'HEAD'],
 		input: 'tex/version.tex.in',
