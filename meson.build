@@ -19,9 +19,8 @@ dump_names = shared_module('dump_names',
 
 robot_dump_names = meson.source_root() / 'test' / 'robot' / 'dump-names'
 
-run_target('robot',
-		command: [
-				find_program('robot'),
+test('robot', find_program('robot'),
+		args: [
 				'-P',
 				robot_dump_names,
 				'-vdump_names:' + dump_names.full_path(),
