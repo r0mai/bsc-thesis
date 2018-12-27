@@ -7,7 +7,7 @@
 
 namespace dn {
 
-class TrivialAction : public clang::PluginASTAction {
+class Action : public clang::PluginASTAction {
 public:
 	std::unique_ptr<clang::ASTConsumer> CreateASTConsumer(
 			clang::CompilerInstance&,

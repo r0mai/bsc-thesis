@@ -1,13 +1,12 @@
 #include <dn/AstConsumer.hpp>
+#include <dn/AstVisitor.hpp>
 
-#include <iostream>
-
-dn::TrivialAstConsumer::TrivialAstConsumer(clang::CompilerInstance& ci) :
+dn::AstConsumer::AstConsumer(clang::CompilerInstance& ci) :
 	ci{ci} {
 	}
 
-void dn::TrivialAstConsumer::HandleTranslationUnit(clang::ASTContext&) {
-	std::cerr << "Have AST" << std::endl;
-	std::cerr << "Output file: " <<
-			ci.getFrontendOpts().OutputFile << std::endl;
+void dn::AstConsumer::HandleTranslationUnit(clang::ASTContext& astContext) {
+	AstVisitor visitor{ci.getFrontendOpts().OutputFile};
+	visitor.TraverseDecl(astContext.getTranslationUnitDecl());
+	visitor.printVariableNames();
 }

@@ -2,6 +2,6 @@
 
 #include <dn/AstAction.hpp>
 
-clang::FrontendPluginRegistry::Add<dn::TrivialAction> _{
+clang::FrontendPluginRegistry::Add<dn::Action> _{
 	"dump-names", "Dump names of types and symbols"
 };

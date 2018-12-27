@@ -1,16 +1,16 @@
 #include <dn/AstAction.hpp>
 
-std::unique_ptr<clang::ASTConsumer> dn::TrivialAction::CreateASTConsumer(
+std::unique_ptr<clang::ASTConsumer> dn::Action::CreateASTConsumer(
 		clang::CompilerInstance& ci,
 		llvm::StringRef) {
-	return std::make_unique<TrivialAstConsumer>(ci);
+	return std::make_unique<AstConsumer>(ci);
 }
 
-bool dn::TrivialAction::ParseArgs(const clang::CompilerInstance&,
+bool dn::Action::ParseArgs(const clang::CompilerInstance&,
 		const std::vector<std::string>&) {
 	return true;
 }
 
-clang::PluginASTAction::ActionType dn::TrivialAction::getActionType() {
+clang::PluginASTAction::ActionType dn::Action::getActionType() {
 	return AddAfterMainAction;
 }

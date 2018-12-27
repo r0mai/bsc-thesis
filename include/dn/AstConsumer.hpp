@@ -6,9 +6,9 @@
 
 namespace dn {
 
-class TrivialAstConsumer : public clang::ASTConsumer {
+class AstConsumer : public clang::ASTConsumer {
 public:
-	TrivialAstConsumer(clang::CompilerInstance& ci);
+	AstConsumer(clang::CompilerInstance& ci);
 
 private:
 	void HandleTranslationUnit(clang::ASTContext&) override;

@@ -10,8 +10,11 @@ dump_names = shared_module('dump_names',
 		'src/plugin.cpp',
 		'src/AstAction.cpp',
 		'src/AstConsumer.cpp',
+		'src/AstVisitor.cpp',
 		include_directories: include_directory,
-		cpp_args: ['-fno-exceptions', '-fno-rtti'],
+		cpp_args: [
+			'-fno-exceptions', '-fno-rtti',
+			'-Wno-comment'],
 		dependencies: [boost_dependency, llvm_dependency])
 
 tex_vcs_tag = vcs_tag(
