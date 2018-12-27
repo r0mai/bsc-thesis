@@ -24,7 +24,9 @@ run_target('robot',
 				find_program('robot'),
 				'-P',
 				robot_dump_names,
-				robot_dump_names])
+				'-vdump_names:' + dump_names.full_path(),
+				robot_dump_names],
+		depends: dump_names)
 
 tex_vcs_tag = vcs_tag(
 		command: ['git', 'rev-parse', '--short', 'HEAD'],

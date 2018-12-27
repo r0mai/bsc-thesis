@@ -43,7 +43,7 @@ Get Variable Name Analysis From Source
     Create File     path=${sourcefile}  content=${source}
     ${result} =     Run Process
     ...             clang++
-    ...             -fplugin\=build/libdump_names.so
+    ...             -fplugin\=${dump_names}
     ...             -Xclang
     ...             -plugin-arg-dump-names
     ...             -Xclang
