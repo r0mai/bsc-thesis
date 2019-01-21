@@ -60,6 +60,8 @@ Get Variable Name Analysis From Source
     ...             ${input_directory}/${sourcefile}
     ...             -o
     ...             /dev/null
+    Log             ${result.stderr}
+    ...             level=DEBUG
     Should Be Equal  ${result.rc}  ${0}
     ${analysis} =    Get File  ${varnames}
     Set Test Variable  ${analysis}
