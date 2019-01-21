@@ -1,14 +1,9 @@
 *** Settings ***
 Library         OperatingSystem
 Library         Process
-Library         libraries/InputBuilder.py
 Library         libraries/TypeNames.py
 
-Test Setup      Remove File     ${sourcefile}
-Test Teardown   Remove File     ${sourcefile}
-
 *** Variables ***
-${sourcefile}   /tmp/test.cpp
 ${varnames}     /tmp/varnames.json
 
 
@@ -20,9 +15,8 @@ No Variables Should Make TypeNames Empty
 
 *** Keywords ***
 Empty File is Passed To Analyzer
-    ${vars} =       Make Variables
-    ${source} =     Get Source  ${vars}
-    Get Variable Name Analysis From Source  ${source}
+    Run Process  pwd
+    Get Variable Name Analysis From Source  empty.cpp
 
 Get Resulting Typenames
     ${result} =     Load Typenames From Analysis  ${analysis}
@@ -39,8 +33,7 @@ Make Variables
     [Return]        ${result}
 
 Get Variable Name Analysis From Source
-    [Arguments]     ${source}
-    Create File     path=${sourcefile}  content=${source}
+    [Arguments]     ${sourcefile}
     ${result} =     Run Process
     ...             clang++
     ...             -fplugin\=${dump_names}
@@ -53,7 +46,7 @@ Get Variable Name Analysis From Source
     ...             -Xclang
     ...             ${varnames}
     ...             -c
-    ...             ${sourcefile}
+    ...             ${input_directory}/${sourcefile}
     ...             -o
     ...             /dev/null
     Should Be Equal  ${result.rc}  ${0}
