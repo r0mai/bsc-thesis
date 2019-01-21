@@ -11,7 +11,7 @@ dn::AstConsumer::AstConsumer(clang::CompilerInstance& ci,
 	}
 
 void dn::AstConsumer::HandleTranslationUnit(clang::ASTContext& astContext) {
-	AstVisitor visitor{outputFilename};
+	AstVisitor visitor{outputFilename, ci.getSourceManager()};
 	visitor.TraverseDecl(astContext.getTranslationUnitDecl());
 	visitor.printVariableNames();
 }

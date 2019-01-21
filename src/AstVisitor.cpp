@@ -1,6 +1,7 @@
 #include <dn/AstVisitor.hpp>
 
 #include <fstream>
+#include <iostream>
 #include <utility>
 
 namespace {
@@ -11,8 +12,10 @@ std::string indent(std::size_t count) {
 
 } // unnamed namespace
 
-dn::AstVisitor::AstVisitor(std::string outputFile) :
-		outputFile(std::move(outputFile)) {
+dn::AstVisitor::AstVisitor(std::string outputFile,
+		const clang::SourceManager& sourceManager) :
+		outputFile(std::move(outputFile)),
+		sourceManager(sourceManager) {
 }
 
 bool dn::AstVisitor::VisitDecl(clang::Decl* decl) {
