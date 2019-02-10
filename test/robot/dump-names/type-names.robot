@@ -2,7 +2,7 @@
 Library         OperatingSystem
 Library         Process
 Library         libraries/InputBuilder.py
-Library         libraries/TypeNames.py
+Library         libraries/Variables.py
 
 Test Setup      Remove File     ${sourcefile}
 Test Teardown   Remove File     ${sourcefile}
@@ -13,9 +13,9 @@ ${varnames}     /tmp/varnames.json
 
 
 *** Test Cases ***
-No Variables Should Make TypeNames Empty
+No Variables Should Make Variables Empty
     Given Empty File is Passed To Analyzer
-     Then TypeNames Should Be Empty
+     Then Variables Should Be Empty
 
 
 *** Keywords ***
@@ -24,12 +24,12 @@ Empty File is Passed To Analyzer
     ${source} =     Get Source  ${vars}
     Get Variable Name Analysis From Source  ${source}
 
-Get Resulting Typenames
-    ${result} =     Load Typenames From Analysis  ${analysis}
+Get Resulting Variables
+    ${result} =     Load Variables From Analysis  ${analysis}
     [Return]        ${result}
 
-TypeNames Should Be Empty
-    ${typenames} =  Get Resulting Typenames
+Variables Should Be Empty
+    ${typenames} =  Get Resulting Variables
     Should Be Empty     ${typenames}
 
 
