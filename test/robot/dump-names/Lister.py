@@ -20,12 +20,16 @@ class Lister(SuiteVisitor):
         for test in suite.tests:
             self._write_line('\\item', test.name)
             self._write_line()
-            self._write_line(test.doc.encode('utf-8').decode('unicode_escape'))
-            for keyword in test.keywords:
-                self._write_line()
-                self._write_line(
-                    '{\\footnotesize \\ttfamily',
-                    self._sanitize(keyword.name), '}')
+            self._write_line(
+                '\\emph{' +
+                test.doc.encode('utf-8').decode('unicode_escape') +
+                '}')
+            self._write_line(
+                    '\\begin{lstlisting}[language=Robot, style=Pretty Robot]')
+            self._write_line(
+                str.join('\n', [keyword.name for keyword in test.keywords]))
+            self._write_line(
+                    '\\end{lstlisting}')
         if (len(suite.tests) > 0):
             self._write_line('\\end{itemize}')
 

@@ -3,4 +3,26 @@
 
 This chapter describes the testing involved in this project.
 
+\lstdefinelanguage{Robot} {
+	morekeywords={
+		given,
+		when,
+		then,
+		and,
+		[setup],
+		[teardown],
+		[template]
+	},
+	alsoletter={[,]},
+	sensitive=false,
+	string=[s]{$\{}{\}}
+}
+
+\lstdefinestyle{Pretty Robot} {
+	language=Robot,
+	keywordstyle=\color{orange},
+	stringstyle=\color{teal},
+	commentstyle=\color{lightgray}
+}
+
 \input{test_list.tex}
