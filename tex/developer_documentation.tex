@@ -4,25 +4,49 @@
 \section{Architectural Overview}
 \label{sec:Arch}
 
+Figure~\ref{fig:Arch} provides an overview of the system. The clang-plugin
+developed produces a database for each translation-unit, which can then be
+merged to make all variable declarations available to the frontend, which can
+then suggest names for the variables.
+
+The structure of the database can be seen in Figure~\ref{fig:Database}.
+
 \begin{figure}
 	\label{fig:Arch}
 	\caption{Overview of Architectural Elements}
 	\begin{center}
 		\begin{tikzpicture}
 
-		\umlclass[x=0, y=0]{header}{}{}
-		\umlclass[x=0, y=-3]{source}{}{}
-		\umlclass[x=5, y=-3]{clang}{}{}
-		\umlclass[x=5, y=0]{plugin}{}{}
-		\umlclass[x=10, y=0]{database}{}{}
-		\umlclass[x=10, y=-3]{frontend}{}{}
+			\umlclass[x=0, y=0]{header}{}{}
+			\umlclass[x=0, y=-3]{source}{}{}
+			\umlclass[x=5, y=-3]{clang}{}{}
+			\umlclass[x=5, y=0]{plugin}{}{}
+			\umlclass[x=10, y=0]{database}{}{}
+			\umlclass[x=10, y=-3]{frontend}{}{}
 
-		\umlaggreg[mult1=*, mult2=*, stereo=includes]{source}{header}
-		\umluniassoc[mult1=1, mult2=*, stereo=compiles]{clang}{source}
-		\umluniassoc[mult1=1, mult2=1, stereo=invokes]{clang}{plugin}
-		\umluniassoc[stereo=produces]{plugin}{database}
-		\umluniassoc[mult1=1, mult2=*, stereo=loads]{frontend}{database}
+			\umlaggreg[mult1=*, mult2=*, stereo=includes]{source}{header}
+			\umluniassoc[mult1=1, mult2=*, stereo=compiles]{clang}{source}
+			\umluniassoc[mult1=1, mult2=1, stereo=invokes]{clang}{plugin}
+			\umluniassoc[stereo=produces]{plugin}{database}
+			\umluniassoc[mult1=1, mult2=*, stereo=loads]{frontend}{database}
 
+		\end{tikzpicture}
+	\end{center}
+\end{figure}
+
+\begin{figure}
+	\label{fig:Database}
+	\caption{Structure of the Database}
+	\begin{center}
+		\begin{tikzpicture}
+			\umlclass[x=0, y=0]{Database}{}{}
+			\umlclass[x=5, y=0]{VariableDeclaration}{
+				name: string \\
+				type: string \\
+				location: string
+			}{}
+
+			\umlcompo[mult1=1, mult2=*]{Database}{VariableDeclaration}
 		\end{tikzpicture}
 	\end{center}
 \end{figure}
