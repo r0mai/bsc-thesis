@@ -14,6 +14,9 @@ class Lister(SuiteVisitor):
 
     def visit_suite(self, suite, level=0):
         self._write_heading(level, suite.name)
+        if (suite.doc):
+            self._write_line('\\emph{' + self._sanitize(suite.doc) + '}')
+            self._write_line()
         if (len(suite.tests) > 0):
             self._write_line('List of tests:')
             self._write_line('\\begin{itemize}')
@@ -42,7 +45,8 @@ class Lister(SuiteVisitor):
         return string.replace('_', '\\_'). \
             replace('$', '\\$'). \
             replace('{', '\\{'). \
-            replace('}', '\\}') \
+            replace('}', '\\}'). \
+            replace('\\n', '\n')
 
     def _write_line(self, *args):
         print(*args, file=self.__output)

@@ -1,4 +1,6 @@
 *** Settings ***
+Documentation   Tests that the part of the database that stores information
+...             about variable declarations is correct.
 Library         OperatingSystem
 Library         Process
 Library         libraries/Variables.py
