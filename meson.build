@@ -52,7 +52,7 @@ tex_test_list = custom_target('Test List',
         depend_files: [
             files([
             'test/robot/dump-names/Lister.py',
-            'test/robot/dump-names/type-names.robot'])])
+            'test/robot/dump-names/variables.robot'])])
 
 thesis = custom_target('Thesis pdf',
         command: [
