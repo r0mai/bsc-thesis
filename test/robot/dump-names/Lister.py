@@ -15,18 +15,15 @@ class Lister(SuiteVisitor):
     def visit_suite(self, suite, level=0):
         self._write_heading(level, suite.name)
         if (suite.doc):
-            self._write_line('\\emph{' + self._sanitize(suite.doc) + '}')
+            self._write_line(self._sanitize(suite.doc))
             self._write_line()
         if (len(suite.tests) > 0):
             self._write_line('List of tests:')
             self._write_line('\\begin{itemize}')
         for test in suite.tests:
-            self._write_line('\\item', test.name)
+            self._write_line('\\item\\emph{' + test.name + '}')
             self._write_line()
-            self._write_line(
-                '\\emph{' +
-                test.doc.encode('utf-8').decode('unicode_escape') +
-                '}')
+            self._write_line(test.doc.encode('utf-8').decode('unicode_escape'))
             self._write_line(
                     '\\begin{lstlisting}[language=Robot, style=Pretty Robot]')
             self._write_line(
