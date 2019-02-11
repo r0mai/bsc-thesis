@@ -49,7 +49,10 @@ tex_test_list = custom_target('Test List',
                 robot_dump_names
         ],
         output: tex_test_list_output,
-        build_always_stale: true)
+        depend_files: [
+            files([
+            'test/robot/dump-names/Lister.py',
+            'test/robot/dump-names/type-names.robot'])])
 
 thesis = custom_target('Thesis pdf',
         command: [
