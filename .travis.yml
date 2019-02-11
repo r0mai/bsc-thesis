@@ -17,6 +17,8 @@ addons:
       - libboost-all-dev
       - texlive-full
       - rubber
+      - wget
+      - ca-certificates
 
 before_script:
   - export PATH=$HOME/.local/bin:$PATH
@@ -25,6 +27,10 @@ before_script:
   - ln -s /usr/bin/clang-7 $HOME/.local/bin/clang
   - pip3 install --user --upgrade pip
   - pip3 install --user --requirement requirements.txt
+  - wget https://perso.ensta-paristech.fr/~kielbasi/tikzuml/var/files/src/tikzuml-v1.0-2016-03-29.tbz -O - | tar -xjf -
+  - sudo mkdir -p /usr/share/texmf/tex/latex/tikz-uml
+  - sudo cp tikzuml*/tikz-uml.sty /usr/share/texmf/tex/latex/tikz-uml/
+  - sudo texhash
 
 script:
   - mkdir build && cd build && meson .. && cd ..
