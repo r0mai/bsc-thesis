@@ -75,4 +75,5 @@ thesis = custom_target('Thesis pdf',
                 'img/elte_logo.eps',
                 'tex/titlepage.tex',
                 'tex/introduction.tex',
-                'tex/developer_documentation.tex'])])
+                'tex/developer_documentation.tex',
+                'tex/testing.tex'])])
