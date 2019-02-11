@@ -1,2 +1,28 @@
 \chapter{Developer Documentation}
 \label{chapter:DevDoc}
+
+\section{Architectural Overview}
+\label{sec:Arch}
+
+\begin{figure}
+	\label{fig:Arch}
+	\caption{Overview of Architectural Elements}
+	\begin{center}
+		\begin{tikzpicture}
+
+		\umlclass[x=0, y=0]{header}{}{}
+		\umlclass[x=0, y=-3]{source}{}{}
+		\umlclass[x=5, y=-3]{clang}{}{}
+		\umlclass[x=5, y=0]{plugin}{}{}
+		\umlclass[x=10, y=0]{database}{}{}
+		\umlclass[x=10, y=-3]{frontend}{}{}
+
+		\umlaggreg[mult1=*, mult2=*, stereo=includes]{source}{header}
+		\umluniassoc[mult1=1, mult2=*, stereo=compiles]{clang}{source}
+		\umluniassoc[mult1=1, mult2=1, stereo=invokes]{clang}{plugin}
+		\umluniassoc[stereo=produces]{plugin}{database}
+		\umluniassoc[mult1=1, mult2=*, stereo=loads]{frontend}{database}
+
+		\end{tikzpicture}
+	\end{center}
+\end{figure}
