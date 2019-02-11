@@ -20,6 +20,11 @@ class Lister(SuiteVisitor):
             self._write_line('\\item', test.name)
             self._write_line()
             self._write_line(test.doc.encode('utf-8').decode('unicode_escape'))
+            for keyword in test.keywords:
+                self._write_line()
+                self._write_line(
+                    '{\\footnotesize \\ttfamily',
+                    self._sanitize(keyword.name), '}')
         if (len(suite.tests) > 0):
             self._write_line('\\end{itemize}')
 
@@ -27,6 +32,12 @@ class Lister(SuiteVisitor):
             assert(level < len(self.__levels))
             self.visit_suite(suite, level+1)
 
+
+    def _sanitize(self, string):
+        return string.replace('_', '\\_'). \
+            replace('$', '\\$'). \
+            replace('{', '\\{'). \
+            replace('}', '\\}') \
 
     def _write_line(self, *args):
         print(*args, file=self.__output)
