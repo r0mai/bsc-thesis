@@ -39,13 +39,13 @@ void dn::AstVisitor::printVariableNames() const {
 		first = false;
 		output << indent(8) << "{\n";
 		output << indent(12)
-				<< "type: " << '"' << variableDeclaration.getType() << '"'
+				<< "\"type\": " << '"' << variableDeclaration.getType() << '"'
 				<< ",\n";
 		output << indent(12)
-				<< "name: " << '"' << variableDeclaration.getName() << '"'
+				<< "\"name\": " << '"' << variableDeclaration.getName() << '"'
 				<< ",\n";
 		output << indent(12)
-				<< "location: " << '"'
+				<< "\"location\": " << '"'
 				<< variableDeclaration.getLocation(sourceManager) << '"'
 				<< "\n";
 		output << indent(8) << "}";
