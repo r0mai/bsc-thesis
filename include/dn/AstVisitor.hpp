@@ -1,11 +1,14 @@
 #ifndef DN_ASTVISITOR_HPP_
 #define DN_ASTVISITOR_HPP_
 
+#include "VariableDeclaration.hpp"
+
 #include <clang/AST/DeclBase.h>
 #include <clang/AST/RecursiveASTVisitor.h>
 
 #include <map>
 #include <string>
+#include <vector>
 
 namespace dn {
 
@@ -22,7 +25,7 @@ private:
 	std::string outputFile;
 	const clang::SourceManager& sourceManager;
 
-	std::map<std::string, std::map<std::string, std::size_t>> variableNames;
+	std::vector<VariableDeclaration> variableDeclarations;
 };
 
 } // namespace dn

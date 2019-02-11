@@ -11,6 +11,7 @@ dump_names = shared_module('dump_names',
         'src/AstAction.cpp',
         'src/AstConsumer.cpp',
         'src/AstVisitor.cpp',
+        'src/VariableDeclaration.cpp',
         include_directories: include_directory,
         cpp_args: [
             '-fno-exceptions', '-fno-rtti',
@@ -47,4 +48,5 @@ thesis = custom_target('Thesis pdf',
             files([
                 'img/elte_logo.eps',
                 'tex/titlepage.tex',
-                'tex/introduction.tex'])])
+                'tex/introduction.tex',
+                'tex/developer_documentation.tex'])])

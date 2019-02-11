@@ -1,24 +1,24 @@
 *** Settings ***
 Library         OperatingSystem
 Library         Process
-Library         libraries/TypeNames.py
+Library         libraries/Variables.py
 
 *** Variables ***
 ${varnames}     /tmp/varnames.json
 
 
 *** Test Cases ***
-No Variables Should Make TypeNames Empty
+No Variables Should Make Variables Empty
     Given Empty File is Passed To Analyzer
-     Then TypeNames Should Have ${0} Entries
+     Then Variables Should Have ${0} Entries
 
 Single Variable Makes TypeNames Have 1 Entry
     Given File single_int.cpp is Passed to Analyzer
-     Then TypeNames Should Have ${1} Entries
+     Then Variables Should Have ${1} Entries
 
-Single Argument Makes TypeNames Have 1 Entry
+Single Argument Makes Variables Have 1 Entry
     Given File single_int_argument.cpp is Passed to Analyzer
-     Then TypeNames Should Have ${1} Entries
+     Then Variables Should Have ${1} Entries
 
 
 *** Keywords ***
@@ -29,12 +29,12 @@ File ${filename} is Passed to Analyzer
     Get Variable Name Analysis From Source  ${filename}
 
 
-TypeNames Should Have ${n} entries
-    ${typenames} =  Get Resulting Typenames
-    Length Should Be  ${typenames}  ${n}
+Variables Should Have ${n} entries
+    ${variables} =  Get Resulting Variables
+    Length Should Be  ${variables}  ${n}
 
-Get Resulting Typenames
-    ${result} =     Load Typenames From Analysis  ${analysis}
+Get Resulting Variables
+    ${result} =     Load Variables From Analysis  ${analysis}
     [Return]        ${result}
 
 
