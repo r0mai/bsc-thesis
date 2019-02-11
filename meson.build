@@ -33,17 +33,38 @@ tex_vcs_tag = vcs_tag(
         input: 'tex/version.tex.in',
         output: 'version.tex')
 
+tex_test_list_output = 'test_list.tex'
+tex_test_list = custom_target('Test List',
+        command: [
+                find_program('robot'),
+                '-P',
+                robot_dump_names,
+                '-vdump_names:' + dump_names.full_path(),
+                '--output=NONE',
+                '--report=NONE',
+                '--log=NONE',
+                '--console=quiet',
+                '--dryrun',
+                '--prerunmodifier', 'Lister:' + tex_test_list_output,
+                robot_dump_names
+        ],
+        output: tex_test_list_output,
+        build_always_stale: true)
+
 thesis = custom_target('Thesis pdf',
         command: [
                 find_program('rubber'),
                 '--pdf',
                 '-I' + meson.source_root() / 'tex',
                 '-I' + meson.source_root() / 'img',
+                '-I' + meson.current_build_dir(),
                 '@INPUT@'],
         build_by_default: true,
         input: 'thesis.tex',
         output: 'thesis.pdf',
-        depends: tex_vcs_tag,
+        depends: [
+            tex_vcs_tag,
+            tex_test_list],
         depend_files: [
             files([
                 'img/elte_logo.eps',

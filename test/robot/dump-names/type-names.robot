@@ -9,14 +9,19 @@ ${varnames}     /tmp/varnames.json
 
 *** Test Cases ***
 No Variables Should Make Variables Empty
+    [Documentation]     Tests that an empty file produces an empty output.
     Given Empty File is Passed To Analyzer
      Then Variables Should Have ${0} Entries
 
 Single Variable Makes Variables Have 1 Entry
+    [Documentation]     Tests that an file with a single variable produces an
+    ...                 output with a single entry.
     Given File single_int.cpp is Passed to Analyzer
      Then Variables Should Have ${1} Entries
 
 Single Argument Makes Variables Have 1 Entry
+    [Documentation]     Tests that an file with a single function with a single
+    ...                 argument produces an output with a single entry.
     Given File single_int_argument.cpp is Passed to Analyzer
      Then Variables Should Have ${1} Entries
 
