@@ -12,7 +12,7 @@ No Variables Should Make Variables Empty
     Given Empty File is Passed To Analyzer
      Then Variables Should Have ${0} Entries
 
-Single Variable Makes TypeNames Have 1 Entry
+Single Variable Makes Variables Have 1 Entry
     Given File single_int.cpp is Passed to Analyzer
      Then Variables Should Have ${1} Entries
 
