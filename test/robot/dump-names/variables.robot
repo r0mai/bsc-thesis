@@ -44,12 +44,6 @@ Get Resulting Variables
     ${result} =     Load Variables From Analysis  ${analysis}
     [Return]        ${result}
 
-
-Make Variables
-    [Arguments]     &{kwargs}
-    ${result} =     Create Dictionary  &{kwargs}
-    [Return]        ${result}
-
 Get Variable Name Analysis From Source
     [Arguments]     ${sourcefile}
     ${result} =     Run Process
