@@ -27,7 +27,7 @@ class Lister(SuiteVisitor):
             self._write_line(
                     '\\begin{lstlisting}[language=Robot, style=Pretty Robot]')
             self._write_line(str.join('\n', [self._format_keyword(keyword.name)
-                for keyword in test.keywords]))
+                for keyword in test.keywords.normal]))
             self._write_line(
                     '\\end{lstlisting}')
         if (len(suite.tests) > 0):
