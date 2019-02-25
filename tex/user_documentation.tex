@@ -1,0 +1,29 @@
+\chapter{User Documentation}
+\label{chapter:UserDoc}
+
+\newread\ownread
+\newcommand{\piprequirements}[1]{
+    \IfFileExists{#1}{
+        \openin\ownread=#1
+        \begin{itemize}
+            \loop\unless\ifeof\ownread
+            \read\ownread to \requirement
+            \ifeof\ownread
+            \else
+                \item \requirement
+            \fi
+            \repeat
+        \end{itemize}
+        \closein\ownread
+    }{File not found}
+}
+
+This chapter describes how to use the various components included in this
+thesis.
+
+\section{Building and Installation}
+\subsection{Prerequisites}
+\subsubsection{Python packages required}
+To build, install and test the components of this project, the following
+dependencies are required:
+\piprequirements{requirements.txt}
