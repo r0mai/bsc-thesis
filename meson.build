@@ -18,14 +18,18 @@ dump_names = shared_module('dump_names',
             '-Wno-comment'],
         dependencies: [boost_dependency, llvm_dependency])
 
-robot_dump_names = meson.source_root() / 'test' / 'robot' / 'dump-names'
+robot = meson.source_root() / 'test' / 'robot'
+robot_dump_names = robot / 'dump-names'
+suggest_names = meson.source_root() / 'suggest_names'
 
 test('robot', find_program('robot'),
         args: [
-                '-P',
+                '--pythonpath',
                 robot_dump_names,
+                '--pythonpath',
+                suggest_names,
                 '-vdump_names:' + dump_names.full_path(),
-                robot_dump_names],
+                robot],
         depends: dump_names)
 
 tex_vcs_tag = vcs_tag(
@@ -37,8 +41,10 @@ tex_test_list_output = 'test_list.tex'
 tex_test_list = custom_target('Test List',
         command: [
                 find_program('robot'),
-                '-P',
+                '--pythonpath',
                 robot_dump_names,
+                '--pythonpath',
+                suggest_names,
                 '-vdump_names:' + dump_names.full_path(),
                 '--output=NONE',
                 '--report=NONE',
@@ -46,7 +52,7 @@ tex_test_list = custom_target('Test List',
                 '--console=quiet',
                 '--dryrun',
                 '--prerunmodifier', 'Lister:' + tex_test_list_output,
-                robot_dump_names
+                robot
         ],
         output: tex_test_list_output,
         depend_files: [
@@ -55,7 +61,10 @@ tex_test_list = custom_target('Test List',
             'test/robot/dump-names/__init__.robot',
             'test/robot/dump-names/Lister.py',
             'test/robot/dump-names/variables.robot',
-            'test/robot/dump-names/libraries/Variables.py'])])
+            'test/robot/dump-names/libraries/Variables.py',
+            'test/robot/suggest-names/__init__.robot',
+            'test/robot/suggest-names/merge.robot',
+            'test/robot/suggest-names/libraries/DatabaseLibrary.py'])])
 
 thesis = custom_target('Thesis pdf',
         command: [

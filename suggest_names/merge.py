@@ -2,10 +2,8 @@ from database import Database
 
 
 def merge_databases(databases):
-    return {
-        "Variables":
-            merge_variables([database.variables for database in databases])
-    }
+    variables = merge_variables([database.variables for database in databases])
+    return Database(variables=variables)
 
 
 def merge_variables(variableses):

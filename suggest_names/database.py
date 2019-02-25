@@ -3,8 +3,8 @@ import json
 from variable import Variable
 
 class Database(object):
-    def __init__(self):
-        self.__variables = {}
+    def __init__(self, variables={}):
+        self.__variables = variables
 
     @staticmethod
     def load_from_file(filename):
@@ -22,3 +22,14 @@ class Database(object):
     @property
     def variables(self):
         return self.__variables
+
+    def __repr__(self):
+        return 'Database(variables=%r)' % (self.__variables)
+
+    def __eq__(self, other):
+        if not isinstance(other, Database):
+            return False
+        return (self.__variables) == (other.__variables)
+
+    def __hash__(self):
+        return hash((self.__variables))
