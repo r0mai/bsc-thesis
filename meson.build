@@ -54,7 +54,8 @@ tex_test_list = custom_target('Test List',
             'test/robot/dump-names/Lister.py',
             'test/robot/dump-names/__init__.robot',
             'test/robot/dump-names/Lister.py',
-            'test/robot/dump-names/variables.robot'])])
+            'test/robot/dump-names/variables.robot',
+            'test/robot/dump-names/libraries/Variables.py'])])
 
 thesis = custom_target('Thesis pdf',
         command: [
