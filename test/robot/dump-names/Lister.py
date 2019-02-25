@@ -26,8 +26,8 @@ class Lister(SuiteVisitor):
             self._write_line(test.doc.encode('utf-8').decode('unicode_escape'))
             self._write_line(
                     '\\begin{lstlisting}[language=Robot, style=Pretty Robot]')
-            self._write_line(
-                str.join('\n', [keyword.name for keyword in test.keywords]))
+            self._write_line(str.join('\n', [self._format_keyword(keyword.name)
+                for keyword in test.keywords]))
             self._write_line(
                     '\\end{lstlisting}')
         if (len(suite.tests) > 0):
@@ -36,6 +36,15 @@ class Lister(SuiteVisitor):
         for suite in suite.suites:
             assert(level < len(self.__levels))
             self.visit_suite(suite, level+1)
+
+    def _format_keyword(self, keyword):
+        prefixes = ['given', 'when', 'then', 'and']
+        longest_length = max([len(prefix) for prefix in prefixes])
+        prefix = keyword.split(maxsplit=1)[0].lower()
+        if prefix not in prefixes:
+            return keyword
+        padding = ' ' * (longest_length - len(prefix))
+        return padding + keyword
 
 
     def _sanitize(self, string):
