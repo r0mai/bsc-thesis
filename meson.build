@@ -68,6 +68,8 @@ tex_test_list = custom_target('Test List',
             'test/robot/dump-names/libraries/Variables.py',
             'test/robot/suggest-names/__init__.robot',
             'test/robot/suggest-names/merge.robot',
+            'test/robot/suggest-names/suggest.robot',
+            'test/robot/suggest-names/resources/DatabaseKeywords.robot',
             'test/robot/suggest-names/libraries/DatabaseLibrary.py'])])
 
 thesis = custom_target('Thesis pdf',

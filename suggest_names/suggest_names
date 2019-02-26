@@ -1,32 +1,13 @@
 #!/usr/bin/env python3
 
 import argparse
-import operator
 
 import database
 import merge
-
-def get_candidate_variable_names(merged_database, requested_variable):
-    result = {}
-    for variable in merged_database.variables:
-        if variable.type == requested_variable.type:
-            if variable.name in result:
-                result[variable.name] += 1
-            else:
-                result[variable.name] = 1
-    return result
+import suggest
 
 
-def suggest_for(merged_database, requested_variable):
-    candidates = get_candidate_variable_names(
-        merged_database, requested_variable)
-    for name, count in sorted(
-            candidates.items(), key=operator.itemgetter(1),
-            reverse=True):
-        print(name)
-
-
-def suggest(databasefiles, filename, line, column):
+def print_suggestions(databasefiles, filename, line, column):
     databases = [
         database.Database.load_from_file(databasefile)
         for databasefile in databasefiles]
@@ -35,7 +16,7 @@ def suggest(databasefiles, filename, line, column):
 
     for variable in merged_database.variables:
         if variable.location == location:
-            suggest_for(merged_database, variable)
+            print('\n'.join(suggest.suggest_for(merged_database, variable)))
             break
     else:
         raise ValueError('Variable to suggest for is not in merged database')
@@ -53,7 +34,7 @@ def main():
         help='Column number of variable to suggest names for')
     args = parser.parse_args()
 
-    suggest(args.database, args.filename, args.line, args.column)
+    print_suggestions(args.database, args.filename, args.line, args.column)
 
 
 if __name__ == '__main__':
