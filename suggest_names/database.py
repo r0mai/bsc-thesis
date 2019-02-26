@@ -7,8 +7,8 @@ class Database(object):
         self.__variables = variables
 
     @staticmethod
-    def load_from_file(filename):
-        d = json.load(open(filename))
+    def load_from_file(file):
+        d = json.load(file)
         db = Database()
         db.__variables = {
             Variable(

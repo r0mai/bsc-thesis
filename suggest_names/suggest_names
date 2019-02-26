@@ -1,19 +1,44 @@
 #!/usr/bin/env python3
 
 import argparse
+import database
+import merge
+
+def suggest_for(merged_database, requested_variable):
+    for variable in merged_database.variables:
+        if variable.type == requested_variable.type:
+            print(variable.name)
+
+
+def suggest(databasefiles, filename, line, column):
+    databases = [
+        database.Database.load_from_file(databasefile)
+        for databasefile in databasefiles]
+    merged_database = merge.merge_databases(databases)
+    location = filename + ':' + str(line) + ':' + str(column)
+
+    for variable in merged_database.variables:
+        if variable.location == location:
+            suggest_for(merged_database, variable)
+            break
+    else:
+        raise ValueError('Variable to suggest for is not in merged database')
 
 
 def main():
     parser = argparse.ArgumentParser(description='Suggest variable names')
     parser.add_argument('database', nargs='+', type=argparse.FileType('r'),
         help='JSON produced by clang-plugin containing all variables')
-    parser.add_argument('filename', nargs=1, type=argparse.FileType('r'),
+    parser.add_argument('filename', type=str,
         help='Filename containing variable to suggest names for')
-    parser.add_argument('line', nargs=1, type=int,
+    parser.add_argument('line', type=int,
         help='Line number of variable to suggest names for')
-    parser.add_argument('column', nargs=1, type=int,
+    parser.add_argument('column', type=int,
         help='Column number of variable to suggest names for')
     args = parser.parse_args()
+
+    suggest(args.database, args.filename, args.line, args.column)
+
 
 if __name__ == '__main__':
     main()
