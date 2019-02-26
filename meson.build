@@ -22,8 +22,10 @@ robot = meson.source_root() / 'test' / 'robot'
 robot_dump_names = robot / 'dump-names'
 suggest_names = meson.source_root() / 'suggest_names'
 
-test('robot', find_program('robot'),
+test('robot', find_program('python3'),
         args: [
+                '-m',
+                'robot',
                 '--pythonpath',
                 robot_dump_names,
                 '--pythonpath',
@@ -40,7 +42,9 @@ tex_vcs_tag = vcs_tag(
 tex_test_list_output = 'test_list.tex'
 tex_test_list = custom_target('Test List',
         command: [
-                find_program('robot'),
+                find_program('python3'),
+                '-m',
+                'robot',
                 '--pythonpath',
                 robot_dump_names,
                 '--pythonpath',
