@@ -27,3 +27,29 @@ thesis.
 To build, install and test the components of this project, the following
 dependencies are required:
 \piprequirements{requirements.txt}
+
+\section{Using}
+\subsection{Generating the variable database}
+Before any variable suggestions can be made, the source-code must be indexed.
+This is achieved with a clang-plugin, that collects all variable occurences,
+and information about them, such as type and name.
+
+\subsubsection{Clang invocation}
+To generate a database for a given source file, run clang as follows:
+
+\begin{lstlisting}
+clang++ \
+	-fplugin=/path/to/dump_names.so \
+	-Xclang \
+	-plugin-arg-dump-names \
+	-Xclang \
+	output-file \
+	-Xclang \
+	-plugin-arg-dump-names \
+	-Xclang \
+	/path/for/database \
+	all... \
+	other... \
+	args... \
+	/path/to/source.cpp
+\end{lstlisting}
