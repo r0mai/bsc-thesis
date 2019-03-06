@@ -3,19 +3,19 @@
 
 \newread\ownread
 \newcommand{\piprequirements}[1]{
-    \IfFileExists{#1}{
-        \openin\ownread=#1
-        \begin{itemize}
-            \loop\unless\ifeof\ownread
-            \read\ownread to \requirement
-            \ifeof\ownread
-            \else
-                \item \requirement \cite{\requirement}
-            \fi
-            \repeat
-        \end{itemize}
-        \closein\ownread
-    }{File not found}
+	\IfFileExists{#1}{
+		\openin\ownread=#1
+		\begin{itemize}
+			\loop\unless\ifeof\ownread
+			\read\ownread to \requirement
+			\ifeof\ownread
+			\else
+				\item \requirement \cite{\requirement}
+			\fi
+			\repeat
+		\end{itemize}
+		\closein\ownread
+	}{File not found}
 }
 
 This chapter describes how to use the various components included in this
