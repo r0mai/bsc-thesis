@@ -1,4 +1,5 @@
 #include "dn/VariableDeclaration.hpp"
+#include <clang/Basic/SourceLocation.h>
 
 dn::VariableDeclaration::VariableDeclaration(const clang::VarDecl& varDecl) :
 	name{varDecl.getNameAsString()},
@@ -16,5 +17,10 @@ std::string dn::VariableDeclaration::getType() const {
 
 std::string dn::VariableDeclaration::getLocation(
 		const clang::SourceManager& sourceManager) const {
-	return location.printToString(sourceManager);
+	auto* file =
+			sourceManager.getFileEntryForID(sourceManager.getFileID(location));
+	auto presumedLocation = sourceManager.getPresumedLoc(location);
+	return file->tryGetRealPathName().str()
+			+ ':' + std::to_string(presumedLocation.getLine())
+			+ ':' + std::to_string(presumedLocation.getColumn());
 }
