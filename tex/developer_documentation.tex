@@ -75,3 +75,11 @@ supports incremental building, wherein a source change only causes the impacted
 source file to be recompiled, the database produced for that source file can
 then be recombined with the rest, to produced a complete overview of all
 variables in the project.
+
+To support renaming of variables, we also need to track the location of any
+references to the variables. This is to ensure that after renaming the
+variable name at the point of declaration, we also must update every part of the
+code that refers to this variable. This can not be achieved by mere textual
+pattern-matching, as multiple scopes may have variables of the same name. This
+means we have to list all occurences during analysis. When merging the databases
+we also need to merge the list of occurences.

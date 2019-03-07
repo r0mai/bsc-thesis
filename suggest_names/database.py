@@ -14,7 +14,8 @@ class Database(object):
             Variable(
                 type=variable["type"],
                 name=variable["name"],
-                location=variable["location"])
+                location=variable["location"],
+                occurences=variable["occurences"])
             for variable in d["Variables"]
         }
         return db

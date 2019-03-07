@@ -3,8 +3,8 @@ import database
 import merge
 import suggest
 
-def make_variable(type, name, location):
-    return variable.Variable(type, name, location)
+def make_variable(type, name, location, occurences={}):
+    return variable.Variable(type, name, location, occurences)
 
 def make_database(*variables):
     return database.Database(variables={*variables})

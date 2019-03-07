@@ -33,3 +33,22 @@ Two different single variable databases merge to database with two variables
       And Database with an other variable
      When Databases are merged
      Then The merged database has ${2} variables
+
+Same occurence passed twice gets merged to single occurence
+    Given Database with one variable and one occurence
+      And Database with one variable and one occurence
+     When Databases are merged
+     Then Each ${1} variables have ${1} occurences
+
+Different occurences of same variable remain separate
+    Given Database with one variable and one occurence
+      And Database with one variable and an other occurence
+     When Databases are merged
+     Then Each ${1} variables have ${2} occurences
+
+Different occurences of same variable remain separate and same ones get merged
+    Given Database with one variable and one occurence
+    Given Database with one variable and one occurence
+      And Database with one variable and an other occurence
+     When Databases are merged
+     Then Each ${1} variables have ${2} occurences
