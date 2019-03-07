@@ -26,8 +26,16 @@ function! s:suggest_names()
   setlocal filetype=SuggestNames
   setlocal buftype=nofile
   call append(0, split(l:suggestions, '\v\n'))
+  nnoremap <buffer> <CR> :SuggestNamesAccept<CR>
+endfunction
+
+function! s:accept_suggestion()
+  let l:line=getline(".")
+  echomsg "Renaming variable to: " . l:line
+  quit
 endfunction
 
 command! SuggestNames call s:suggest_names()
+command! SuggestNamesAccept call s:accept_suggestion()
 
 call s:init()
