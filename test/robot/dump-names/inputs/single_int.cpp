@@ -1,4 +1,5 @@
 int main() {
 	int i;
-	(void)i;
+	i = 0;
+	++i;
 }
