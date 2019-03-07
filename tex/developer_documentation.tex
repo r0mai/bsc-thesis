@@ -11,6 +11,12 @@ then suggest names for the variables.
 
 The structure of the database can be seen in Figure~\ref{fig:Database}.
 
+%Hack to get the stereo to be aligned next to the line instead of on it.
+\newcommand{\stereorelation}[5]{
+	#1[#3]{#4}{#5}
+	#1[arg1=$\ll$#2$\gg$, pos1=0.5]{#4}{#5}
+}
+
 \begin{figure}
 	\label{fig:Arch}
 	\caption{Overview of Architectural Elements}
@@ -24,11 +30,16 @@ The structure of the database can be seen in Figure~\ref{fig:Database}.
 			\umlclass[x=10, y=0]{database}{}{}
 			\umlclass[x=10, y=-3]{frontend}{}{}
 
-			\umlaggreg[mult1=*, mult2=*, stereo=includes]{source}{header}
-			\umluniassoc[mult1=1, mult2=*, stereo=compiles]{clang}{source}
-			\umluniassoc[mult1=1, mult2=1, stereo=invokes]{clang}{plugin}
-			\umluniassoc[stereo=produces]{plugin}{database}
-			\umluniassoc[mult1=1, mult2=*, stereo=loads]{frontend}{database}
+			\stereorelation{\umlaggreg}
+					{includes}{mult1=*, mult2=*}{source}{header}
+			\stereorelation{\umluniassoc}
+					{compiles}{mult1=1, mult2=*}{clang}{source}
+			\stereorelation{\umluniassoc}
+					{invokes}{mult1=1, mult2=1}{clang}{plugin}
+			\stereorelation{\umluniassoc}
+					{produces}{}{plugin}{database}
+			\stereorelation{\umluniassoc}
+					{loads}{mult1=1, mult2=*}{frontend}{database}
 
 		\end{tikzpicture}
 	\end{center}
