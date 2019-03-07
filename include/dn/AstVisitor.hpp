@@ -18,6 +18,7 @@ public:
 			const clang::SourceManager& sourceManager);
 
 	bool VisitDecl(clang::Decl* decl);
+	bool VisitStmt(clang::Stmt* stmt);
 
 	void printVariableNames() const;
 

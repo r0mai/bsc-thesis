@@ -5,6 +5,8 @@
 #include <clang/Basic/SourceManager.h>
 #include <clang/Basic/SourceLocation.h>
 
+#include <vector>
+
 namespace dn {
 
 class VariableDeclaration {
@@ -13,11 +15,17 @@ public:
 	std::string getName() const;
 	std::string getType() const;
 	std::string getLocation(const clang::SourceManager& sourceManager) const;
+	bool operator==(const VariableDeclaration& rhs) const;
+	const std::vector<std::string>& getOccurences() const;
+
+	void addOccurence(clang::SourceLocation location,
+			const clang::SourceManager& sourceManager);
 
 private:
 	std::string name;
 	std::string type;
 	clang::SourceLocation location;
+	std::vector<std::string> occurences;
 };
 
 } // namespace dn

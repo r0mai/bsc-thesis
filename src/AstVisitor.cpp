@@ -1,5 +1,6 @@
 #include <dn/AstVisitor.hpp>
 
+#include <algorithm>
 #include <fstream>
 #include <iostream>
 #include <utility>
@@ -27,6 +28,24 @@ bool dn::AstVisitor::VisitDecl(clang::Decl* decl) {
 	return true;
 }
 
+bool dn::AstVisitor::VisitStmt(clang::Stmt* stmt) {
+	if (clang::DeclRefExpr* expr = clang::dyn_cast<clang::DeclRefExpr>(stmt)) {
+		auto* decl = expr->getDecl();
+		if (auto* varDecl = clang::dyn_cast<clang::VarDecl>(decl)) {
+			VariableDeclaration variableDeclaration{*varDecl};
+			auto it = std::find(variableDeclarations.begin(),
+					variableDeclarations.end(), variableDeclaration);
+			if (it == variableDeclarations.end()) {
+				std::cerr << "What" << std::endl;
+				return true;
+			} else {
+				it->addOccurence(expr->getLocation(), sourceManager);
+			}
+		}
+	}
+	return true;
+}
+
 void dn::AstVisitor::printVariableNames() const {
 	std::ofstream output{outputFile};
 	output << "{\n";
@@ -47,7 +66,18 @@ void dn::AstVisitor::printVariableNames() const {
 		output << indent(12)
 				<< "\"location\": " << '"'
 				<< variableDeclaration.getLocation(sourceManager) << '"'
-				<< "\n";
+				<< ",\n";
+		output << indent(12)
+				<< "\"occurences\": " << "[\n";
+		bool firstOccurence = true;
+		for (const auto& occurence: variableDeclaration.getOccurences()) {
+			if (!firstOccurence) {
+				output << ",\n";
+			}
+			output << indent(16) << '"' << occurence << '"';
+			firstOccurence = false;
+		}
+		output << indent(12) << "]\n";
 		output << indent(8) << "}";
 	}
 	output << "\n" << indent(4) << "]\n";

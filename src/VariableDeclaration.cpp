@@ -1,10 +1,27 @@
 #include "dn/VariableDeclaration.hpp"
 #include <clang/Basic/SourceLocation.h>
 
+#include <utility>
+
+namespace {
+
+std::string sourceLocationToString(
+		const clang::SourceLocation& location,
+		const clang::SourceManager& sourceManager) {
+	auto* file =
+			sourceManager.getFileEntryForID(sourceManager.getFileID(location));
+	auto presumedLocation = sourceManager.getPresumedLoc(location);
+	return file->tryGetRealPathName().str()
+			+ ':' + std::to_string(presumedLocation.getLine())
+			+ ':' + std::to_string(presumedLocation.getColumn());
+}
+} // unnamed namespace
+
 dn::VariableDeclaration::VariableDeclaration(const clang::VarDecl& varDecl) :
 	name{varDecl.getNameAsString()},
 	type{varDecl.getType().getAsString()},
-	location{varDecl.getLocation()} {
+	location{varDecl.getLocation()},
+	occurences{} {
 }
 
 std::string dn::VariableDeclaration::getName() const {
@@ -17,10 +34,20 @@ std::string dn::VariableDeclaration::getType() const {
 
 std::string dn::VariableDeclaration::getLocation(
 		const clang::SourceManager& sourceManager) const {
-	auto* file =
-			sourceManager.getFileEntryForID(sourceManager.getFileID(location));
-	auto presumedLocation = sourceManager.getPresumedLoc(location);
-	return file->tryGetRealPathName().str()
-			+ ':' + std::to_string(presumedLocation.getLine())
-			+ ':' + std::to_string(presumedLocation.getColumn());
+	return sourceLocationToString(location, sourceManager);
+}
+
+bool dn::VariableDeclaration::operator==(const dn::VariableDeclaration& rhs)
+		const {
+	return std::tie(name, type, location) ==
+			std::tie(rhs.name, rhs.type, rhs.location);
+}
+
+const std::vector<std::string>& dn::VariableDeclaration::getOccurences() const {
+	return occurences;
+}
+
+void dn::VariableDeclaration::addOccurence(
+		clang::SourceLocation location, const clang::SourceManager& sourceManager) {
+	occurences.push_back(sourceLocationToString(location, sourceManager));
 }
