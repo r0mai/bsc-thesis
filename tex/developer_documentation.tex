@@ -65,3 +65,13 @@ The structure of the database can be seen in Figure~\ref{fig:Database}.
 		\end{tikzpicture}
 	\end{center}
 \end{figure}
+
+\subsection{Database Format}
+The database produced by the compiler-plugin generates a list of declarations
+that are later used for suggesting variables.
+The database format is designed such that each translation unit creates its own
+database, so that when a project is being built with a build-system that
+supports incremental building, wherein a source change only causes the impacted
+source file to be recompiled, the database produced for that source file can
+then be recombined with the rest, to produced a complete overview of all
+variables in the project.
