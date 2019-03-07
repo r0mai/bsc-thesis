@@ -29,12 +29,12 @@ dependencies are required:
 \piprequirements{requirements.txt}
 
 \section{Using}
-\subsection{Generating the variable database}
+\subsection{Generating the Variable Database}
 Before any variable suggestions can be made, the source-code must be indexed.
 This is achieved with a clang-plugin, that collects all variable occurences,
 and information about them, such as type and name.
 
-\subsubsection{Clang invocation}
+\subsubsection{Clang Invocation}
 To generate a database for a given source file, run clang as follows:
 
 \begin{lstlisting}
@@ -53,3 +53,15 @@ clang++ \
 	args... \
 	/path/to/source.cpp
 \end{lstlisting}
+
+\subsection{Using the Vim Plugin}
+The Vim plugin can be added to a your \lstinline|.vimrc| by adding the following
+two lines:
+
+\begin{lstlisting}
+set rtp+=/path/to/repository/vim
+helptags /path/to/repository/vim/doc
+\end{lstlisting}
+
+Following this, the documentation of the Vim plugin is available through the
+usual commands of Vim, such as \lstinline|:help|.
