@@ -5,6 +5,7 @@ import argparse
 import database
 import merge
 import suggest
+import os
 
 
 def print_suggestions(databasefiles, filename, line, column):
@@ -12,6 +13,7 @@ def print_suggestions(databasefiles, filename, line, column):
         database.Database.load_from_file(databasefile)
         for databasefile in databasefiles]
     merged_database = merge.merge_databases(databases)
+    filename = os.path.abspath(filename)
     location = filename + ':' + str(line) + ':' + str(column)
 
     for variable in merged_database.variables:
