@@ -16,6 +16,13 @@ Database with one variable should suggest its own name
      When Suggestions are requested
      Then Suggestions have ${1} elements
 
+Database with two variables of same type should suggest both
+    Given Database with one variable
+      And Database with an other variable
+      And Databases are merged
+     When Suggestions are requested
+     Then Suggestions have ${2} elements
+
 *** Keywords ***
 Suggestions are requested
     ${suggestions} =    Make suggestions  ${merged_database}  ${variable}
