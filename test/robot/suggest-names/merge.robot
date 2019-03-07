@@ -48,7 +48,7 @@ Different occurences of same variable remain separate
 
 Different occurences of same variable remain separate and same ones get merged
     Given Database with one variable and one occurence
-    Given Database with one variable and one occurence
+      And Database with one variable and one occurence
       And Database with one variable and an other occurence
      When Databases are merged
      Then Each ${1} variables have ${2} occurences
