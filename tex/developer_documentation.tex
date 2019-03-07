@@ -45,8 +45,12 @@ The structure of the database can be seen in Figure~\ref{fig:Database}.
 				type: string \\
 				location: string
 			}{}
+			\umlclass[x=5, y=-5]{VariableOccurence}{
+				location: string
+			}
 
 			\umlcompo[mult1=1, mult2=*]{Database}{VariableDeclaration}
+			\umlcompo[mult1=1, mult2=*]{VariableDeclaration}{VariableOccurence}
 		\end{tikzpicture}
 	\end{center}
 \end{figure}
