@@ -1,0 +1,64 @@
+#!/usr/bin/env python3
+
+import argparse
+import database
+import merge
+import os
+
+def rename_occurence(filename, line, column, oldname, newname):
+    with open(filename) as f:
+        content = f.readlines()
+        replacement_line = content[line-1] # line numbers are indexed base-1
+        prefix = replacement_line[:column-1] # column indices are also base-1
+        suffix = replacement_line[column -1 + len(oldname):]
+        replacement_line = prefix + newname + suffix
+        content[line-1] = replacement_line
+        with open(filename, 'w') as replacement_f:
+            replacement_f.writelines(content)
+
+def parse_location(location):
+    sections = location.split(':')
+    return (sections[0], int(sections[1]), int(sections[2]))
+
+def rename_variable(databasefiles, filename, line, column, name):
+    databases = [
+        database.Database.load_from_file(databasefile)
+        for databasefile in databasefiles]
+    merged_database = merge.merge_databases(databases)
+    filename = os.path.abspath(filename)
+    location = filename + ':' + str(line) + ':' + str(column)
+
+    for variable in merged_database.variables:
+        if variable.location == location:
+            # TODO: Sort occurences so that occurences later in the same line
+            # come sooner, so that we don't have to reindex the line.
+            occurences = [
+                    parse_location(occurence)
+                    for occurence in variable.occurences]
+            for occurence in occurences:
+                rename_occurence(*occurence, variable.name, name)
+            rename_occurence(
+                    *parse_location(variable.location), variable.name, name)
+            break
+    else:
+        raise ValueError('Variable to rename is not present in database')
+
+def main():
+    parser = argparse.ArgumentParser(description='Rename variables')
+    parser.add_argument('database', nargs='+', type=argparse.FileType('r'),
+        help='JSON produced by clang-plugin containing all variables')
+    parser.add_argument('--filename', type=str,
+        help='Filename containing variable to suggest names for')
+    parser.add_argument('--line', type=int,
+        help='Line number of variable to suggest names for')
+    parser.add_argument('--column', type=int,
+        help='Column number of variable to suggest names for')
+    parser.add_argument('--name', type=str, required=True,
+        help='New name for the variable')
+    args = parser.parse_args()
+
+    rename_variable(
+            args.database, args.filename, args.line, args.column, args.name)
+
+if __name__ == '__main__':
+    main()
