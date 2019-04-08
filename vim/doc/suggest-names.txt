@@ -1,33 +1,32 @@
-*suggest-names.txt*        Suggest variable names for C++
+*suggest-names.txt*            Suggest variable names for C++
 
-=======================================================
-INTRODUCTION             *vim-suggest-names-introduction*
+===========================================================
+INTRODUCTION                 *vim-suggest-names-introduction*
 
 This plugin wraps `suggest-names` so that you can
 automatically have variable suggestions for C++ code.
 
-=======================================================
-USAGE                           *vim-suggest-names-usage*
+===========================================================
+USAGE                               *vim-suggest-names-usage*
 
-When editing C++, use |:SuggestNames| to have a buffer
-appear with variable suggestions
+When editing C++, use |:SuggestNames| to have a buffer appear
+with variable suggestions.
 
-=======================================================
-COMMANDS                     *vim-suggest-names-commands*
+===========================================================
+COMMANDS                         *vim-suggest-names-commands*
 
-                                          *:SuggestNames*
+                                              *:SuggestNames*
 :SuggestNames       Suggest variables for the variable
                     under the cursor.
-                    The following maps are provided for
-                    the suggestion buffer:
+                    The following maps are provided for the
+                    suggestion buffer:
 
-                    <CR> Accept the given suggestion,
-                         and perform a rename of the
-                         variable. This will trigger a
-                         change to all buffers that
-                         refer to this variable, so you
-                         will be prompted to reload
-                         the impacted files.
+                    <CR> Accept the given suggestion, and
+                         perform a rename of the variable.
+                         This will trigger a change to all
+                         buffers contain references to this
+                         variable, so you will be prompted
+                         to reload the impacted files.
 
-=======================================================
-vim:tw=56:colorcolumn=56:ts=8:ft=help:noet:fen:fdl=0:
+===========================================================
+vim:tw=60:colorcolumn=60:ts=4:ft=help:fen:fdl=0:
