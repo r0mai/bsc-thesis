@@ -1,21 +1,21 @@
-*suggest-names.txt*                              Suggest variable names for C++
+*suggest-names.txt*        Suggest variable names for C++
 
-=============================================================================
-INTRODUCTION                                   *vim-suggest-names-introduction*
+=======================================================
+INTRODUCTION             *vim-suggest-names-introduction*
 
-This plugin wraps `suggest-names` so that you can automatically have variable
-suggestions for C++ code.
+This plugin wraps `suggest-names` so that you can
+automatically have variable suggestions for C++ code.
 
-=============================================================================
-USAGE                                                 *vim-suggest-names-usage*
+=======================================================
+USAGE                           *vim-suggest-names-usage*
 
-When editing C++, use |:SuggestNames| to have a buffer appear with variable
-suggestions
+When editing C++, use |:SuggestNames| to have a buffer
+appear with variable suggestions
 
-=============================================================================
-COMMANDS                                           *vim-suggest-names-commands*
+=======================================================
+COMMANDS                     *vim-suggest-names-commands*
 
-:SuggestNames                                                   *:SuggestNames*
+:SuggestNames                             *:SuggestNames*
  Suggest variables for the variable under the cursor.
-=============================================================================
-vim:tw=78:colorcolumn=78:ts=8:ft=help:norl:noet:fen:fdl=0:
+=======================================================
+vim:tw=56:colorcolumn=56:ts=8:ft=help:noet:fen:fdl=0:

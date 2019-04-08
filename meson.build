@@ -72,13 +72,17 @@ tex_test_list = custom_target('Test List',
             'test/robot/suggest-names/resources/DatabaseKeywords.robot',
             'test/robot/suggest-names/libraries/DatabaseLibrary.py'])])
 
+vim_doc = configure_file(input: 'vim/doc/suggest-names.txt',
+        output: 'vim-doc.txt',
+        copy: true)
+
 thesis = custom_target('Thesis pdf',
         command: [
                 find_program('rubber'),
                 '--pdf',
                 '-I' + meson.source_root() / 'tex',
                 '-I' + meson.source_root() / 'img',
-                '-I' + meson.source_root(),
+                '-I' + meson.source_root() / 'vim' / 'doc',
                 '-I' + meson.current_build_dir(),
                 '--command', 'bibtex.path ' + meson.source_root() / 'tex',
                 '@INPUT@'],
@@ -89,6 +93,7 @@ thesis = custom_target('Thesis pdf',
             tex_vcs_tag,
             tex_test_list],
         depend_files: [
+            vim_doc,
             files([
                 'img/elte_logo.eps',
                 'tex/titlepage.tex',
