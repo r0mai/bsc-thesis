@@ -1,12 +1,9 @@
 if exists("g:suggestnames#loaded")
   finish
 endif
+let s:suggest_names_path = expand('<sfile>:p:h') . '/../../suggest_names/suggest_names'
+let s:rename_path = expand('<sfile>:p:h') . '/../../suggest_names/suggest_names_rename'
 let g:suggestnames#loaded = "yes"
-
-function! s:init()
-  let s:suggest_names_path = expand('%:p:h') . '/suggest_names/suggest_names'
-  let s:rename_path = expand('%:p:h') . '/suggest_names/suggest_names_rename'
-endfunction
 
 function! s:suggest_names()
  "This is to ensure we are at the start
@@ -49,5 +46,3 @@ endfunction
 
 command! SuggestNames call s:suggest_names()
 command! -nargs=+ SuggestNamesAccept call s:accept_suggestion(<f-args>)
-
-call s:init()
