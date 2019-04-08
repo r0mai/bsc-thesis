@@ -44,7 +44,7 @@ function! s:accept_suggestion(filename, line, column, ...)
         \ " " .
         \ join(a:000, " "))
   quit
-  edit
+  checktime
 endfunction
 
 command! SuggestNames call s:suggest_names()
