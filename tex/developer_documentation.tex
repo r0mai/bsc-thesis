@@ -83,3 +83,36 @@ code that refers to this variable. This can not be achieved by mere textual
 pattern-matching, as multiple scopes may have variables of the same name. This
 means we have to list all occurences during analysis. When merging the databases
 we also need to merge the list of occurences.
+
+\section{Clang-plugin Architecture}
+
+\begin{figure}
+	\label{fig:Plugin}
+	\caption{Structure of the Clang-plugin}
+	\begin{center}
+		\begin{tikzpicture}
+			\begin{umlpackage}{clang}
+				\umlclass[x=0, y=0]{FrontendPluginRegistry}{}{};
+				\umlclass[x=5, y=0]{PluginASTAction}{}{};
+				\umlclass[x=0, y=-3]{ASTConsumer}{}{};
+				\umlclass[x=5, y=-3, template={Derived}]{RecursiveASTVisitor}{}{};
+			\end{umlpackage}
+			\begin{umlpackage}{dn}
+				\umlclass[x=5, y=-8]{Action}{
+					std::unique\_ptr$<$Consumer$>$ CreateASTConsumer(...) \\
+					bool ParseArgs(...) \\
+					ActionType getActionType()
+				}{};
+				\umlinherit{Action}{PluginASTAction};
+				\umlclass[x=0, y=-11]{Consumer}{
+					void HandleTranslationUnit(...)}{};
+				\umlinherit{Consumer}{ASTConsumer}
+				\umlclass[x=0, y=-14]{Visitor}{
+					bool VisitDecl(Decl*) \\
+					bool VisitStmt(Stmt*)
+				}{};
+				\umlinherit{Visitor}{RecursiveASTVisitor};
+			\end{umlpackage}
+		\end{tikzpicture}
+	\end{center}
+\end{figure}
