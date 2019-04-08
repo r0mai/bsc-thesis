@@ -92,27 +92,39 @@ we also need to merge the list of occurences.
 	\begin{center}
 		\begin{tikzpicture}
 			\begin{umlpackage}{clang}
-				\umlclass[x=0, y=0]{FrontendPluginRegistry}{}{};
-				\umlclass[x=5, y=0]{PluginASTAction}{}{};
-				\umlclass[x=0, y=-3]{ASTConsumer}{}{};
-				\umlclass[x=5, y=-3, template={Derived}]{RecursiveASTVisitor}{}{};
+				\umlsimpleclass[x=0, y=0]{FrontendPluginRegistry};
+				\umlsimpleclass[x=5, y=0]{PluginASTAction};
+				\umlsimpleclass[x=0, y=-2]{ASTConsumer};
+				\umlsimpleclass[x=5, y=-2, template={Derived}]{RecursiveASTVisitor};
 			\end{umlpackage}
 			\begin{umlpackage}{dn}
-				\umlclass[x=5, y=-8]{Action}{
+				\umlclass[x=5, y=-7]{Action}{
 					std::unique\_ptr$<$Consumer$>$ CreateASTConsumer(...) \\
 					bool ParseArgs(...) \\
 					ActionType getActionType()
 				}{};
 				\umlinherit{Action}{PluginASTAction};
-				\umlclass[x=0, y=-11]{Consumer}{
+				\umlclass[x=0, y=-10]{Consumer}{
 					void HandleTranslationUnit(...)}{};
 				\umlinherit{Consumer}{ASTConsumer}
-				\umlclass[x=0, y=-14]{Visitor}{
+				\umlclass[x=-1, y=-13]{Visitor}{
 					bool VisitDecl(Decl*) \\
 					bool VisitStmt(Stmt*)
 				}{};
 				\umlinherit{Visitor}{RecursiveASTVisitor};
+				\umlclass[x=6, y=-13]{VariableDeclaration}{
+					std::string getLocation(SourceManager\&) \\
+					void addOccurence(...)
+				}{
+					std::string name, type \\
+					SourceLocation location \\
+					std::vector$<$std::string$>$ occurences
+				};
+				\stereorelation{\umluniassoc}
+						{generates}{mult1=1, mult2=*}{Visitor}{VariableDeclaration};
 			\end{umlpackage}
 		\end{tikzpicture}
 	\end{center}
 \end{figure}
+
+The clang-plugin
