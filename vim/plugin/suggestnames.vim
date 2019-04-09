@@ -27,6 +27,7 @@ function! s:suggest_names()
   setlocal filetype=SuggestNames
   setlocal buftype=nofile
   call append(0, split(l:suggestions, '\v\n'))
+  normal gg
   execute 'nnoremap <buffer> <CR> :SuggestNamesAccept ' . l:filename . ' ' . l:line . ' ' . l:column . ' ' . l:databasefilename . '<CR>'
 endfunction
 
