@@ -8,10 +8,16 @@ namespace {
 std::string sourceLocationToString(
 		const clang::SourceLocation& location,
 		const clang::SourceManager& sourceManager) {
+	std::string fullPath;
+	auto presumedLocation = sourceManager.getPresumedLoc(location);
 	auto* file =
 			sourceManager.getFileEntryForID(sourceManager.getFileID(location));
-	auto presumedLocation = sourceManager.getPresumedLoc(location);
-	return file->tryGetRealPathName().str()
+	if (file) {
+		fullPath = file->tryGetRealPathName().str();
+	} else {
+		fullPath = presumedLocation.getFilename();
+	}
+	return fullPath
 			+ ':' + std::to_string(presumedLocation.getLine())
 			+ ':' + std::to_string(presumedLocation.getColumn());
 }
