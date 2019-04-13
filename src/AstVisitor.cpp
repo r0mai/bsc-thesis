@@ -118,6 +118,9 @@ void dn::AstVisitor::printVariableNames() const {
 	output << indent(4) << '"' << "Variables" << '"' << ": [\n";
 	bool first = true;
 	for (const auto& variableDeclaration: variableDeclarations) {
+		if (variableDeclaration.getName().empty()) {
+			continue; // Empty names are of no use to us.
+		}
 		if (!first) {
 			output << ",\n";
 		}
