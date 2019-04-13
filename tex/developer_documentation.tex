@@ -153,7 +153,80 @@ the Abstract Syntax Tree of the given Translation Unit.
 when invoked by Clang.
 
 \section{Implementation}
+\subsection{Visiting the Abstract Syntax Tree}
+
+There are two main tasks to accomplish when traversing the Abstract Syntax Tree:
+the first is to record all variable declarations, the second is to record all
+references to these variables.
+
+Both of these tasks are accomplised by the \lstinline|Visitor| class.
+To facilitate these tasks, Clang's \lstinline|RecursiveASTVisitor| provides two
+functions for us to override: \lstinline|VisitDecl| and \lstinline|VisitStmt|.
+
+\lstinline|VisitDecl| is used to visit all declarations as described in
+\fref{sec:visitdecl}, whereas \lstinline|VisitStmt| is used to visit all
+statements as described in \fref{sec:visitstmt}.
+
+\subsubsection{Visiting Declarations}
+\label{sec:visitdecl}
+There are two sorts of declarations that we are interested in: variable
+declarations, and field declarations.
+
+The kinds a variable declaration can be are as follows:
+\begin{itemize}
+	\item Function-local variable
+	\item Global variable
+	\item Function argument
+\end{itemize}
+
+Our task in all of these cases is to record the name, type and location of the
+variable being declared. These are then used as a composite key to compare
+variables. The location not only contains the line and column of the variable,
+but also the filename. This is important as during the compilation of a
+translation unit, we may also visit declarations that come from another file,
+most notably header files. Once the databases are merged, duplicate variables
+will be removed, as described in \fref{sec:dbmerge}.
+
+\subsubsection{Visiting Statements}
+\label{sec:visitstmt}
+When visiting statements, most statements are of no use to us. The only types
+of statements that are of interest to us, are statements that refer to variable
+declarations (or field declarations). We record these references, so that when
+renaming a variable, we know what other parts of the code we need to change.
+
+When traversing statements, we only handle \lstinline|DeclRefExpr|s, and
+\lstinline|MemberExpr|s.
+
+In both cases, all we have to do is lookup the original declaration of the
+variable (or field) that the expression refers to, and add the current source
+location to its set of occurences. In most cases, the declaration will be
+visited before the statement that refers to it, however there are two notable
+exceptions.
+
+The most obvious exception to this well-ordering is when we have a class that
+has a member function that refers to a member of the class that is defined
+before the member. In \CC{} the order of function definitions and members in a
+class defintion does not matter like it normally would, and Clang traverses
+these declarations and defintions roughly in the order they appear in the
+source-code. This means we may occur a reference to a field before we have
+managed to record the field itself.
+
+The other --more subtle-- case where we may see a reference before a declaration
+is in the case of template functions whose return type and signature are only
+determined fully upon instantiation. These function templates needn't be
+instantiated to be visited, however when they are, there arguments are
+referenced before they are declared.
+
+In both of the above cases, we need to make sure that the variable to which we
+are trying to add an occurence already exists in the database. The naive
+approach to this is to record it if it is not already present, and doing the
+same when recording a declaration.
+
+We cannot merely rely upon discovering all variable declarations by noticing
+them through statements, as some variables are declared but never referred to.
+
 \subsection{Merging the Databases}
+\label{sec:dbmerge}
 
 The database format as described in \fref{sec:dbfmt} was chosen to enable
 merging the databases.
