@@ -21,27 +21,71 @@ dn::AstVisitor::AstVisitor(std::string outputFile,
 
 bool dn::AstVisitor::VisitDecl(clang::Decl* decl) {
 	auto* variableDeclaration = clang::dyn_cast<clang::VarDecl>(decl);
-	if (!variableDeclaration) {
+	if (variableDeclaration) {
+		visitVariableDeclaration(*variableDeclaration);
 		return true;
 	}
-	variableDeclarations.emplace_back(*variableDeclaration);
+	auto* fieldDeclaration = clang::dyn_cast<clang::FieldDecl>(decl);
+	if (fieldDeclaration) {
+		visitFieldDeclaration(*fieldDeclaration);
+		return true;
+	}
 	return true;
+}
+
+void dn::AstVisitor::visitVariableDeclaration(
+		const clang::VarDecl& variableDeclaration) {
+	variableDeclarations.emplace_back(variableDeclaration);
+}
+
+void dn::AstVisitor::visitFieldDeclaration(
+		const clang::FieldDecl& fieldDeclaration) {
+	variableDeclarations.emplace_back(fieldDeclaration);
+}
+
+void dn::AstVisitor::visitDeclarationReferenceExpression(
+		const clang::DeclRefExpr& declarationReferenceExpression) {
+	auto* decl = declarationReferenceExpression.getDecl();
+	if (auto* varDecl = clang::dyn_cast<clang::VarDecl>(decl)) {
+		VariableDeclaration variableDeclaration{*varDecl};
+		auto it = std::find(variableDeclarations.begin(),
+				variableDeclarations.end(), variableDeclaration);
+		if (it == variableDeclarations.end()) {
+			std::cerr << "What" << std::endl;
+		} else {
+			addOccurence(*it, declarationReferenceExpression.getLocation());
+		}
+	}
+}
+
+void dn::AstVisitor::visitMemberExpression(const clang::MemberExpr&
+		memberExpression) {
+	auto* decl = memberExpression.getFoundDecl().getDecl();
+	if (auto* fieldDecl = clang::dyn_cast<clang::FieldDecl>(decl)) {
+		VariableDeclaration variableDeclaration{*fieldDecl};
+		auto it = std::find(variableDeclarations.begin(),
+				variableDeclarations.end(), variableDeclaration);
+		if (it == variableDeclarations.end()) {
+			std::cerr << "What" << std::endl;
+		} else {
+			addOccurence(*it, memberExpression.getExprLoc());
+		}
+	} else {
+		std::cerr << "What other kind of memberExpr is there?" << std::endl;
+	}
+}
+
+void dn::AstVisitor::addOccurence(dn::VariableDeclaration& variableDeclaration,
+		const clang::SourceLocation& location) {
+	variableDeclaration.addOccurence(location, sourceManager);
 }
 
 bool dn::AstVisitor::VisitStmt(clang::Stmt* stmt) {
 	if (clang::DeclRefExpr* expr = clang::dyn_cast<clang::DeclRefExpr>(stmt)) {
-		auto* decl = expr->getDecl();
-		if (auto* varDecl = clang::dyn_cast<clang::VarDecl>(decl)) {
-			VariableDeclaration variableDeclaration{*varDecl};
-			auto it = std::find(variableDeclarations.begin(),
-					variableDeclarations.end(), variableDeclaration);
-			if (it == variableDeclarations.end()) {
-				std::cerr << "What" << std::endl;
-				return true;
-			} else {
-				it->addOccurence(expr->getLocation(), sourceManager);
-			}
-		}
+		visitDeclarationReferenceExpression(*expr);
+	}
+	if (clang::MemberExpr* expr = clang::dyn_cast<clang::MemberExpr>(stmt)) {
+		visitMemberExpression(*expr);
 	}
 	return true;
 }

@@ -30,6 +30,13 @@ dn::VariableDeclaration::VariableDeclaration(const clang::VarDecl& varDecl) :
 	occurences{} {
 }
 
+dn::VariableDeclaration::VariableDeclaration(const clang::FieldDecl& fieldDecl) :
+	name{fieldDecl.getNameAsString()},
+	type{fieldDecl.getType().getAsString()},
+	location{fieldDecl.getLocation()},
+	occurences{} {
+}
+
 std::string dn::VariableDeclaration::getName() const {
 	return name;
 }

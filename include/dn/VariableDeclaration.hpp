@@ -12,6 +12,7 @@ namespace dn {
 class VariableDeclaration {
 public:
 	VariableDeclaration(const clang::VarDecl&);
+	VariableDeclaration(const clang::FieldDecl&);
 	std::string getName() const;
 	std::string getType() const;
 	std::string getLocation(const clang::SourceManager& sourceManager) const;

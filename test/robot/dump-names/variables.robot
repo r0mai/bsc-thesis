@@ -24,10 +24,16 @@ Single Variable Makes Variables Have 1 Entry
      Then There Should Be ${1} Entries that Occur ${2} Times
 
 Single Argument Makes Variables Have 1 Entry
-    [Documentation]     Tests that an file with a single function with a single
+    [Documentation]     Tests that a file with a single function with a single
     ...                 argument produces an output with a single entry.
     Given File single_int_argument.cpp is Passed to Analyzer
      Then There Should Be ${1} Entries that Occur ${1} Times
+
+Single Member of Struct Makes Variables Have 1 Entry
+    [Documentation]     Tests that a file with a single struct with a single
+    ...                 member produces an output with a single entry.
+    Given File single_struct_member.cpp is Passed to Analyzer
+     Then There Should Be ${1} Entries that Occur ${0} Times
 
 
 *** Keywords ***
