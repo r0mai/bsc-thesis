@@ -108,12 +108,16 @@ we also need to merge the list of occurences.
 				\umlclass[x=0, y=-10]{Consumer}{
 					void HandleTranslationUnit(...)}{};
 				\umlinherit{Consumer}{ASTConsumer}
-				\umlclass[x=-1, y=-13]{Visitor}{
+				\stereorelation{\umluniassoc}
+						{creates}{mult1=1, mult2=1}{Action}{Consumer};
+				\umlclass[x=7, y=-10]{Visitor}{
 					bool VisitDecl(Decl*) \\
 					bool VisitStmt(Stmt*)
 				}{};
 				\umlinherit{Visitor}{RecursiveASTVisitor};
-				\umlclass[x=6, y=-13]{VariableDeclaration}{
+				\stereorelation{\umluniassoc}
+						{invokes}{mult1=1, mult2=1}{Consumer}{Visitor};
+				\umlclass[x=0, y=-13]{VariableDeclaration}{
 					std::string getLocation(SourceManager\&) \\
 					void addOccurence(...)
 				}{
@@ -128,7 +132,25 @@ we also need to merge the list of occurences.
 	\end{center}
 \end{figure}
 
-The clang-plugin
+The clang-plugin contains all the code needed for traversing the Abstract
+Syntax Tree, along with the routines needed for dumping the names that occur in
+the codebase to a JSON file. All code in the clang-plugin is defined in
+\lstinline|namespace dn|.
+
+The plugin first starts by loading \lstinline|Action| into
+\lstinline|clang::FrontEndPluginRegistry|. \lstinline|Action| can then parse the
+command-line arguments passed to Clang, so that it can deduce the filename that
+was set for storing the output JSON. \lstinline|Action| uses
+\lstinline|clang::PluginASTAction::ActionType Action::getActionType()| to inform
+Clang that \lstinline|Action| should not inhibit compilation, and should be
+invoked after the compilation has been done.
+
+Clang then loads the \lstinline|Consumer| as specifed by
+\lstinline|Action::CreateASTConsumer|, which can then proceed with traversing
+the Abstract Syntax Tree of the given Translation Unit.
+
+\lstinline|Consumer|'s sole responsibility is to invoke the \lstinline|Visitor|
+when invoked by Clang.
 
 \section{Implementation}
 \subsection{Merging the Databases}
