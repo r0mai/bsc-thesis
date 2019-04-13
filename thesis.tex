@@ -18,6 +18,7 @@
 	basicstyle=\ttfamily\footnotesize
 }
 
+\makeatletter
 \lstdefinelanguage{vimdoc}{
 	keywords={},
 	alsoletter={-, .},
@@ -25,7 +26,9 @@
 	moredelim=[is][\color{gray}]{`}{`},
 	moredelim=[is][\itshape \color{blue}]{|}{|},
 	moredelim=[s][\color{red}]{<}{>},
+	morecomment=[l][\@gobble]{vim:}
 }
+\makeatother
 
 \frenchspacing
 \onehalfspacing
