@@ -67,6 +67,7 @@ The structure of the database can be seen in Figure~\ref{fig:Database}.
 \end{figure}
 
 \subsection{Database Format}
+\label{sec:dbfmt}
 The database produced by the compiler-plugin generates a list of declarations
 that are later used for suggesting variables.
 The database format is designed such that each translation unit creates its own
@@ -128,3 +129,47 @@ we also need to merge the list of occurences.
 \end{figure}
 
 The clang-plugin
+
+\section{Implementation}
+\subsection{Merging the Databases}
+
+The database format as described in \fref{sec:dbfmt} was chosen to enable
+merging the databases.
+As the database is merely a list of Variables, each with a type, name location
+and a list of occurences, these can be merged simply.
+
+Given the following variable:
+\begin{lstlisting}[mathescape]
+{
+	"type": TYPE,
+	"name": NAME,
+	"location": LOCATION,
+	"occurences": [ $\ldots$ ]
+}
+\end{lstlisting}
+and databases $database_1, \ldots, database_n$, we can construct the merged
+variable as follows:
+
+\begin{lstlisting}[escapeinside={(*}{*)}]
+{
+	"type": TYPE,
+	"name": NAME,
+	"location": LOCATION,
+	"occurences": [
+		(*
+		\[
+			\bigcup_{i=1}^{n}{
+				\left \{
+					\substack{
+						v.occurences \mid v \in database_i.variables \\
+						\land v.type = TYPE \\
+						\land v.name = NAME \\
+						\land v.location = LOCATION
+					}
+				\right \}
+			}
+		\]
+		*)
+	]
+}
+\end{lstlisting}
