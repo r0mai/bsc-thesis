@@ -34,13 +34,32 @@ bool dn::AstVisitor::VisitDecl(clang::Decl* decl) {
 }
 
 void dn::AstVisitor::visitVariableDeclaration(
-		const clang::VarDecl& variableDeclaration) {
-	variableDeclarations.emplace_back(variableDeclaration);
+		const clang::VarDecl& varDecl) {
+	// In the case we're declaring an argument to a template function,
+	// if the function has a trailing return type, then the arguments will be
+	// referred to before declared. To make sure we catch everything, we'll
+	// visit the declaration then and there, so we cannot assume the declaration
+	// is new here.
+	VariableDeclaration variableDeclaration{varDecl};
+	auto it = std::find(
+			variableDeclarations.begin(), variableDeclarations.end(),
+			variableDeclaration);
+	if (it == variableDeclarations.end()) {
+		variableDeclarations.push_back(std::move(variableDeclaration));
+	}
 }
 
 void dn::AstVisitor::visitFieldDeclaration(
 		const clang::FieldDecl& fieldDeclaration) {
-	variableDeclarations.emplace_back(fieldDeclaration);
+	// We'll register the field at the declaration or the first reference.
+	// Because of this, we cannot assume that the fieldDeclaration is new.
+	VariableDeclaration variableDeclaration{fieldDeclaration};
+	auto it = std::find(
+			variableDeclarations.begin(), variableDeclarations.end(),
+			variableDeclaration);
+	if (it == variableDeclarations.end()) {
+		variableDeclarations.push_back(std::move(variableDeclaration));
+	}
 }
 
 void dn::AstVisitor::visitDeclarationReferenceExpression(
@@ -48,13 +67,11 @@ void dn::AstVisitor::visitDeclarationReferenceExpression(
 	auto* decl = declarationReferenceExpression.getDecl();
 	if (auto* varDecl = clang::dyn_cast<clang::VarDecl>(decl)) {
 		VariableDeclaration variableDeclaration{*varDecl};
+		visitVariableDeclaration(*varDecl);
 		auto it = std::find(variableDeclarations.begin(),
 				variableDeclarations.end(), variableDeclaration);
-		if (it == variableDeclarations.end()) {
-			std::cerr << "What" << std::endl;
-		} else {
-			addOccurence(*it, declarationReferenceExpression.getLocation());
-		}
+		assert(it != variableDeclarations.end());
+		addOccurence(*it, declarationReferenceExpression.getLocation());
 	}
 }
 
@@ -63,15 +80,20 @@ void dn::AstVisitor::visitMemberExpression(const clang::MemberExpr&
 	auto* decl = memberExpression.getFoundDecl().getDecl();
 	if (auto* fieldDecl = clang::dyn_cast<clang::FieldDecl>(decl)) {
 		VariableDeclaration variableDeclaration{*fieldDecl};
+		// Members don't have to appear sooner than their first use, so
+		// it's possible we encounter a reference before we encounter the
+		// declaration.
+		visitFieldDeclaration(*fieldDecl);
 		auto it = std::find(variableDeclarations.begin(),
 				variableDeclarations.end(), variableDeclaration);
-		if (it == variableDeclarations.end()) {
-			std::cerr << "What" << std::endl;
-		} else {
-			addOccurence(*it, memberExpression.getExprLoc());
-		}
+		assert(it != variableDeclarations.end());
+		addOccurence(*it, memberExpression.getExprLoc());
+	} else if (auto* methodDecl = clang::dyn_cast<clang::CXXMethodDecl>(decl)) {
+		(void)methodDecl;
 	} else {
 		std::cerr << "What other kind of memberExpr is there?" << std::endl;
+		std::cerr << memberExpression.getExprLoc().printToString(sourceManager) << std::endl;
+		std::cerr << decl->getLocation().printToString(sourceManager) << std::endl;
 	}
 }
 
