@@ -115,17 +115,17 @@ bool dn::AstVisitor::VisitStmt(clang::Stmt* stmt) {
 void dn::AstVisitor::printVariableNames() const {
 	std::ofstream output{outputFile};
 	output << "{\n";
-	output << indent(4) << '"' << "Variables" << '"' << ": [\n";
+	output << indent(4) << '"' << "Variables" << '"' << ": [";
 	bool first = true;
 	for (const auto& variableDeclaration: variableDeclarations) {
 		if (variableDeclaration.getName().empty()) {
 			continue; // Empty names are of no use to us.
 		}
 		if (!first) {
-			output << ",\n";
+			output << ",";
 		}
 		first = false;
-		output << indent(8) << "{\n";
+		output << "\n" << indent(8) << "{\n";
 		output << indent(12)
 				<< "\"type\": " << '"' << variableDeclaration.getType() << '"'
 				<< ",\n";
@@ -137,16 +137,16 @@ void dn::AstVisitor::printVariableNames() const {
 				<< variableDeclaration.getLocation(sourceManager) << '"'
 				<< ",\n";
 		output << indent(12)
-				<< "\"occurences\": " << "[\n";
+				<< "\"occurences\": " << "[";
 		bool firstOccurence = true;
 		for (const auto& occurence: variableDeclaration.getOccurences()) {
 			if (!firstOccurence) {
-				output << ",\n";
+				output << ",";
 			}
-			output << indent(16) << '"' << occurence << '"';
+			output << "\n" << indent(16) << '"' << occurence << '"';
 			firstOccurence = false;
 		}
-		output << indent(12) << "]\n";
+		output << "\n" << indent(12) << "]\n";
 		output << indent(8) << "}";
 	}
 	output << "\n" << indent(4) << "]\n";
