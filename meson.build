@@ -61,6 +61,7 @@ tex_test_list = custom_target('Test List',
         output: tex_test_list_output,
         depend_files: [
             files([
+            'schema/varnames.json',
             'test/robot/dump-names/Lister.py',
             'test/robot/dump-names/__init__.robot',
             'test/robot/dump-names/Lister.py',
@@ -74,6 +75,9 @@ tex_test_list = custom_target('Test List',
 
 vim_doc = configure_file(input: 'vim/doc/suggest-names.txt',
         output: 'vim-doc.txt',
+        copy: true)
+schema = configure_file(input: 'schema/varnames.json',
+        output: 'varnames.json',
         copy: true)
 
 thesis = custom_target('Thesis pdf',
@@ -94,6 +98,7 @@ thesis = custom_target('Thesis pdf',
             tex_test_list],
         depend_files: [
             vim_doc,
+            schema,
             files([
                 'img/elte_logo.eps',
                 'tex/titlepage.tex',
@@ -101,4 +106,5 @@ thesis = custom_target('Thesis pdf',
                 'tex/user_documentation.tex',
                 'tex/developer_documentation.tex',
                 'tex/testing.tex',
-                'tex/bibliography.bib'])])
+                'tex/bibliography.bib',
+                'tex/appendix.tex'])])

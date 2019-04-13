@@ -1,0 +1,66 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "type": "object",
+  "title": "Schema for variable-name database",
+  "required": [
+    "Variables"
+  ],
+  "properties": {
+    "Variables": {
+      "type": "array",
+      "title": "The Variables Schema",
+      "items": {
+        "type": "object",
+        "title": "The Items Schema",
+        "required": [
+          "type",
+          "name",
+          "location",
+          "occurences"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "title": "The Type Schema",
+            "default": "",
+            "examples": [
+              "std::function<void (void)>"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "name": {
+            "type": "string",
+            "title": "The Name Schema",
+            "default": "",
+            "examples": [
+              "f"
+            ],
+            "pattern": "^(.*)$"
+          },
+          "location": {
+            "type": "string",
+            "title": "The Location Schema",
+            "default": "",
+            "examples": [
+              "/path/to/include/a.hpp:123:45"
+            ],
+            "pattern": "^(.*)[0-9]+:[0-9]+$"
+          },
+          "occurences": {
+            "type": "array",
+            "title": "The Occurences Schema",
+            "items": {
+              "type": "string",
+              "title": "The Items Schema",
+              "default": "",
+              "examples": [
+                "/path/to/source/a.cpp:12:34"
+              ],
+              "pattern": "^(.*)[0-9]+:[0-9]+$"
+            }
+          }
+        }
+      }
+    }
+  }
+}

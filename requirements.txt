@@ -1,3 +1,4 @@
 meson
 ninja
 robotframework
+jsonschema
