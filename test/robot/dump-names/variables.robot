@@ -41,6 +41,19 @@ Single Member of Struct Makes Variables Have 1 Entry
     Given File single_struct_member.cpp is Passed to Analyzer
      Then There Should Be ${1} Entries that Occur ${0} Times
 
+Union Member Of Struct Makes Variables Have 3 Entries
+    [Documentation]     Tests that a file with a single struct containing a
+    ...                 union and a bool to discriminate upon, is handled
+    ...                 correctly despite the indirect field.
+    Given File member_union_access.cpp is Passed to Analyzer
+     Then There Should be ${3} Entries that Occur ${1} Times
+
+Union Makes Variables Have 3 Entries
+    [Documentation]     Tests that a file with a function-local union and a bool
+    ...                 to discriminate upon, is handled correctly despite the
+    ...                 indirect variable.
+    Given File union_access.cpp is Passed to Analyzer
+     Then There Should be ${3} Entries that Occur ${1} Times
 
 *** Keywords ***
 Empty File is Passed To Analyzer

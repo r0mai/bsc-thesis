@@ -88,8 +88,11 @@ void dn::AstVisitor::visitMemberExpression(const clang::MemberExpr&
 				variableDeclarations.end(), variableDeclaration);
 		assert(it != variableDeclarations.end());
 		addOccurence(*it, memberExpression.getExprLoc());
-	} else if (auto* methodDecl = clang::dyn_cast<clang::CXXMethodDecl>(decl)) {
-		(void)methodDecl;
+	} else if (clang::isa<clang::CXXMethodDecl>(decl)) {
+		// Ignore methods
+	} else if (clang::isa<clang::IndirectFieldDecl>(decl)) {
+		// Ignore indirect field access, the direct field will be visited
+		// anyway.
 	} else {
 		std::cerr << "What other kind of memberExpr is there?" << std::endl;
 		std::cerr << memberExpression.getExprLoc().printToString(sourceManager) << std::endl;
