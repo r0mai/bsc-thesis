@@ -90,6 +90,8 @@ void dn::AstVisitor::visitMemberExpression(const clang::MemberExpr&
 		addOccurence(*it, memberExpression.getExprLoc());
 	} else if (clang::isa<clang::CXXMethodDecl>(decl)) {
 		// Ignore methods
+	} else if (clang::isa<clang::FunctionTemplateDecl>(decl)) {
+		// Ignore template methods
 	} else if (clang::isa<clang::IndirectFieldDecl>(decl)) {
 		// Ignore indirect field access, the direct field will be visited
 		// anyway.
