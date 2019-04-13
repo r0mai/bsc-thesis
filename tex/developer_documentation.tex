@@ -267,3 +267,26 @@ variable as follows:
 	]
 }
 \end{lstlisting}
+
+\subsection{Making Suggestions}
+\label{sec:suggesting}
+
+When the developer requests a suggestion for a name, the first thing we need to
+do is merge the databases that correspond to the project (as described in
+\fref{sec:dbmerge}).
+
+Once we have a merged database of all variables, we can then make a suggestion
+based on the type of the variable we wish to rename.
+
+\subsubsection{Making Suggestions Based on Type}
+
+From the complete database $database$, we first get all the candidate names by
+looking up all variables that have the same type as the variable we are
+suggesting names for. Let's call the variable we are suggesting a new name for
+$variable$. The set of names then becomes:
+
+\[
+	\left \{ v.name
+			\mid v \in database.variables \land v.type = variable.type \right \}
+\]
+We also assign a weight to these names based on how frequently they occur.
