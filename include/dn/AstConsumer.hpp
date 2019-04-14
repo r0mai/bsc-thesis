@@ -6,6 +6,7 @@
 
 #include <boost/optional.hpp>
 
+#include <map>
 #include <string>
 
 namespace dn {
@@ -20,6 +21,7 @@ private:
 
 	clang::CompilerInstance& ci;
 	std::string outputFilename;
+	std::map<std::string, std::string> debugPrefixMap;
 };
 
 } // namespace dn

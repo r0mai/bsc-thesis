@@ -1,5 +1,7 @@
 #include <dn/AstVisitor.hpp>
 
+#include <boost/algorithm/string/predicate.hpp>
+
 #include <algorithm>
 #include <fstream>
 #include <iostream>
@@ -11,12 +13,28 @@ std::string indent(std::size_t count) {
 	return std::string(count, ' ');
 }
 
+std::string normalizeLocation(const std::string& location,
+		const std::map<std::string, std::string>& debugPrefixMap) {
+	for (const auto& debugPrefix: debugPrefixMap) {
+		const auto& prefix = debugPrefix.first;
+		const auto& replacement = debugPrefix.second;
+		if (boost::starts_with(location, prefix)) {
+			std::string result = replacement;
+			result += location.substr(prefix.length());
+			return result;
+		}
+	}
+	return location;
+}
+
 } // unnamed namespace
 
 dn::AstVisitor::AstVisitor(std::string outputFile,
-		const clang::SourceManager& sourceManager) :
+		const clang::SourceManager& sourceManager,
+		const std::map<std::string, std::string>& debugPrefixMap) :
 		outputFile(std::move(outputFile)),
-		sourceManager(sourceManager) {
+		sourceManager(sourceManager),
+		debugPrefixMap{debugPrefixMap} {
 }
 
 bool dn::AstVisitor::VisitDecl(clang::Decl* decl) {
@@ -139,7 +157,9 @@ void dn::AstVisitor::printVariableNames() const {
 				<< ",\n";
 		output << indent(12)
 				<< "\"location\": " << '"'
-				<< variableDeclaration.getLocation(sourceManager) << '"'
+				<< normalizeLocation(
+						variableDeclaration.getLocation(sourceManager),
+						debugPrefixMap) << '"'
 				<< ",\n";
 		output << indent(12)
 				<< "\"occurences\": " << "[";
@@ -148,7 +168,8 @@ void dn::AstVisitor::printVariableNames() const {
 			if (!firstOccurence) {
 				output << ",";
 			}
-			output << "\n" << indent(16) << '"' << occurence << '"';
+			output << "\n" << indent(16) << '"'
+					<< normalizeLocation(occurence, debugPrefixMap) << '"';
 			firstOccurence = false;
 		}
 		output << "\n" << indent(12) << "]\n";

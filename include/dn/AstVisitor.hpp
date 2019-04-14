@@ -16,7 +16,8 @@ namespace dn {
 class AstVisitor : public clang::RecursiveASTVisitor<AstVisitor> {
 public:
 	AstVisitor(std::string outputFile,
-			const clang::SourceManager& sourceManager);
+			const clang::SourceManager& sourceManager,
+			const std::map<std::string, std::string>& debugPrefixMap);
 
 	bool VisitDecl(clang::Decl* decl);
 	bool VisitStmt(clang::Stmt* stmt);
@@ -37,6 +38,7 @@ private:
 
 	std::string outputFile;
 	const clang::SourceManager& sourceManager;
+	const std::map<std::string, std::string>& debugPrefixMap;
 
 	std::vector<VariableDeclaration> variableDeclarations;
 };
