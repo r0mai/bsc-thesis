@@ -5,7 +5,7 @@
 \newcommand{\piprequirements}[1]{
 	\IfFileExists{#1}{
 		\openin\ownread=#1
-		\begin{itemize}
+		\begin{inparaitem}
 			\loop\unless\ifeof\ownread
 			\read\ownread to \requirement
 			\ifeof\ownread
@@ -13,7 +13,7 @@
 				\item \requirement \cite{\requirement}
 			\fi
 			\repeat
-		\end{itemize}
+		\end{inparaitem}
 		\closein\ownread
 	}{File not found}
 }
