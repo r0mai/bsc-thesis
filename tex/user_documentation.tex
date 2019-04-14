@@ -127,6 +127,15 @@ The documentation for \lstinline|suggest_names_rename| is as follows:
 \lstinputlisting[caption={\lstinline|suggest_names_rename --help|}]
 		{suggest_names_rename_help.txt}
 
+To accept \lstinline|identifier| as the new name for \lstinline|Foo::id|, we
+invoke \lstinline|suggest_names_rename| as follows:
+\begin{lstlisting}[caption={Invocation of \lstinline|suggest_name_rename|}]
+suggest_names_rename \
+	--filename test.cpp --line 2 --column 6 \
+	--name identifier \
+	varnames.json
+\end{lstlisting}
+
 \subsection{Using the Vim Plugin}
 To help making renaming easier, a Vim \cite{vim} plugin is included.
 With it, the renaming process can be done interactively without needing to use
