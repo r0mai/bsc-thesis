@@ -111,6 +111,22 @@ suggest_names_help = custom_target('suggest_names --help',
         ],
         output: 'suggest_names_help.txt')
 
+suggest_names_rename_help = custom_target('suggest_names_rename --help',
+        command: [
+                find_program('env'),
+                'COLUMNS=60',
+                'python3',
+                suggest_names / 'suggest_names_rename',
+                '--help'],
+        capture: true,
+        depend_files: [
+                suggest_names / 'suggest_names_rename',
+                suggest_names / 'database.py',
+                suggest_names / 'merge.py',
+                suggest_names / 'suggest.py',
+        ],
+        output: 'suggest_names_rename_help.txt')
+
 example_varnames_json = custom_target('Example Variable-names Database',
         command: [
                 find_program('clang++'),
@@ -171,6 +187,7 @@ thesis = custom_target('Thesis pdf',
             tex_test_list,
             apt_packages,
             suggest_names_help,
+            suggest_names_rename_help,
             example_varnames_json],
         depend_files: [
             vim_doc,
