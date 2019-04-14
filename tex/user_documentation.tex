@@ -28,6 +28,35 @@ To build, install and test the components of this project, the following
 dependencies are required:
 \piprequirements{requirements.txt}
 
+\subsubsection{\LaTeX{} packages required}
+\begin{itemize}
+	\item Tikz-UML \cite{tikzuml}
+\end{itemize}
+
+\subsection{Building}
+Once the repository is cloned, setup a build directory and invoke meson.
+\begin{lstlisting}[language=bash]
+cd /path/to/repository
+mkdir build
+cd build
+meson ..
+cd ..
+\end{lstlisting}
+
+The default build target will build the project, along with this thesis.
+\begin{lstlisting}[language=bash]
+ninja -C build
+\end{lstlisting}
+
+To run the tests, use \lstinline|ninja -C build test|.
+
+\subsection{Installing}
+Add \lstinline|suggest_names| to your \lstinline|PATH|.
+\begin{lstlisting}[language=bash]
+$ export PATH=/path/to/repository/suggest_names:$PATH
+\end{lstlisting}
+
+
 \section{Using}
 \subsection{Generating the Variable Database}
 Before any variable suggestions can be made, the source-code must be indexed.
