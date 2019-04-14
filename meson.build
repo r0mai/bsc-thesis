@@ -21,6 +21,7 @@ dump_names = shared_module('dump_names',
 robot = meson.source_root() / 'test' / 'robot'
 robot_dump_names = robot / 'dump-names'
 suggest_names = meson.source_root() / 'suggest_names'
+examples = meson.source_root() / 'examples'
 
 test('robot', find_program('python3'),
         args: [
@@ -90,6 +91,9 @@ vim_doc = configure_file(input: 'vim/doc/suggest-names.txt',
 schema = configure_file(input: 'schema/varnames.json',
         output: 'varnames.json',
         copy: true)
+example_cpp = configure_file(input: examples / 'example.cpp',
+        output: 'example.cpp',
+        copy: true)
 
 suggest_names_help = custom_target('suggest_names --help',
         command: [
@@ -106,6 +110,30 @@ suggest_names_help = custom_target('suggest_names --help',
                 suggest_names / 'suggest.py',
         ],
         output: 'suggest_names_help.txt')
+
+example_varnames_json = custom_target('Example Variable-names Database',
+        command: [
+                find_program('clang++'),
+                '-fplugin=' + dump_names.full_path(),
+                '-Xclang',
+                '-plugin-arg-dump-names',
+                '-Xclang',
+                'output-file',
+                '-Xclang',
+                '-plugin-arg-dump-names',
+                '-Xclang',
+                '@OUTPUT@',
+                '-c',
+                '@INPUT@',
+                '-fdebug-prefix-map=' + meson.source_root() + '=.',
+                '-std=c++11',
+                '-o',
+                '/dev/null'],
+        depends: [
+                dump_names
+        ],
+        input: examples / 'example.cpp',
+        output: 'example.varnames.json')
 
 thesis = custom_target('Thesis pdf',
         command: [
@@ -124,7 +152,8 @@ thesis = custom_target('Thesis pdf',
             tex_vcs_tag,
             tex_test_list,
             apt_packages,
-            suggest_names_help],
+            suggest_names_help,
+            example_varnames_json],
         depend_files: [
             vim_doc,
             schema,

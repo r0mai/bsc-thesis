@@ -86,6 +86,21 @@ clang++ \
 	/path/to/source.cpp
 \end{lstlisting}
 
+In the following sections we will refer to the following example piece of \CC{}
+code:
+
+\lstinputlisting{example.cpp}
+
+Running the Clang-plugin as described above will give us a JSON file containing
+information on the symbols in the program:
+
+\lstinputlisting{example.varnames.json}
+
+By default, all filenames in the output are full paths. To make the output more
+easily legible, we pass the \lstinline|-fdebug-prefix-map=/path/to/repository=.|
+command-line argument to Clang, so that the output files are relative the root
+of the repository.
+
 \subsection{Generating Variable-name Suggestions}
 Once the code-base is indexed, suggestions can be requested with the script
 \lstinline|suggest_names|.
