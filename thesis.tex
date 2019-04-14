@@ -20,7 +20,12 @@
 \usepackage{paralist}
 
 \lstset{
-	basicstyle=\ttfamily\footnotesize
+	basicstyle=\ttfamily\footnotesize,
+	stringstyle=\color{teal},
+	keywordstyle=\color{orange},
+	numberstyle=\color{gray},
+	showstringspaces=false
+	showspaces=false
 }
 
 \makeatletter
@@ -34,6 +39,10 @@
 	morecomment=[l][\@gobble]{vim:}
 }
 \makeatother
+
+\lstdefinelanguage{json}{
+	morestring=[b]",
+}
 
 \frenchspacing
 \onehalfspacing

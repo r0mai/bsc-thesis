@@ -235,7 +235,7 @@ As the database is merely a list of Variables, each with a type, name location
 and a list of occurences, these can be merged simply.
 
 Given the following variable:
-\begin{lstlisting}[mathescape]
+\begin{lstlisting}[mathescape, language=json]
 {
 	"type": TYPE,
 	"name": NAME,
@@ -246,7 +246,7 @@ Given the following variable:
 and databases $database_1, \ldots, database_n$, we can construct the merged
 variable as follows:
 
-\begin{lstlisting}[escapeinside={(*}{*)}]
+\begin{lstlisting}[escapeinside={(*}{*)}, language=json]
 {
 	"type": TYPE,
 	"name": NAME,

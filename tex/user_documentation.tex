@@ -69,7 +69,7 @@ and information about them, such as type and name.
 \subsubsection{Clang Invocation}
 To generate a database for a given source file, run clang as follows:
 
-\begin{lstlisting}
+\begin{lstlisting}[caption={Invocation of Clang}]
 clang++ \
 	-fplugin=/path/to/repository/build/libdump_names.so \
 	-Xclang \
@@ -89,12 +89,13 @@ clang++ \
 In the following sections we will refer to the following example piece of \CC{}
 code:
 
-\lstinputlisting{example.cpp}
+\lstinputlisting[language=c++, numbers=left, caption=example.cpp]{example.cpp}
 
 Running the Clang-plugin as described above will give us a JSON file containing
 information on the symbols in the program:
 
-\lstinputlisting{example.varnames.json}
+\lstinputlisting[language=json, numbers=left, caption=varnames.json]
+		{example.varnames.json}
 
 By default, all filenames in the output are full paths. To make the output more
 easily legible, we pass the \lstinline|-fdebug-prefix-map=/path/to/repository=.|
@@ -106,7 +107,8 @@ Once the code-base is indexed, suggestions can be requested with the script
 \lstinline|suggest_names|.
 
 \lstinline|suggest_names|' documentation is as follows:
-\lstinputlisting{suggest_names_help.txt}
+\lstinputlisting[caption={\lstinline|suggest_names --help|}]
+	{suggest_names_help.txt}
 
 
 \subsection{Using the Vim Plugin}
