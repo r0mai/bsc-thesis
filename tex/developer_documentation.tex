@@ -75,7 +75,8 @@ database, so that when a project is being built with a build-system that
 supports incremental building, wherein a source change only causes the impacted
 source file to be recompiled, the database produced for that source file can
 then be recombined with the rest, to produced a complete overview of all
-variables in the project.
+variables in the project. For a formal schema of the database, see
+appendix \ref{appendix:schema}.
 
 To support renaming of variables, we also need to track the location of any
 references to the variables. This is to ensure that after renaming the
