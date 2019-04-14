@@ -110,10 +110,23 @@ Once the code-base is indexed, suggestions can be requested with the script
 \lstinputlisting[caption={\lstinline|suggest_names --help|}]
 	{suggest_names_help.txt}
 
+Invoking \lstinline|suggest_names| to suggest an alternative to
+\lstinline|Foo::id| can be done as follows:
+
+\begin{lstlisting}
+suggest_names varnames.json ./examples/example.cpp 2 9
+\end{lstlisting}
+
+The resulting suggestions are as follows:
+\lstinputlisting[caption={Suggestions for \lstinline|Foo::id|}]
+		{example_suggestions}
 
 \subsection{Using the Vim Plugin}
-The Vim \cite{vim} plugin can be added to your \lstinline|.vimrc| by adding the
-following two lines:
+To help making renaming easier, a Vim \cite{vim} plugin is included.
+With it, the renaming process can be done interactively without needing to use
+command-line tools.
+The Vim plugin can be added to your \lstinline|.vimrc| by adding the following
+two lines:
 
 \begin{lstlisting}
 set rtp+=/path/to/repository/vim

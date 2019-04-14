@@ -135,6 +135,24 @@ example_varnames_json = custom_target('Example Variable-names Database',
         input: examples / 'example.cpp',
         output: 'example.varnames.json')
 
+example_suggestions = custom_target('Example variable name suggestions',
+        command: [
+                find_program('python3'),
+                suggest_names / 'suggest_names',
+                example_varnames_json,
+                './examples/example.cpp',
+                '2',
+                '9'
+        ],
+        depend_files: [
+                suggest_names / 'suggest_names',
+                suggest_names / 'database.py',
+                suggest_names / 'merge.py',
+                suggest_names / 'suggest.py',
+        ],
+        capture: true,
+        output: 'example_suggestions',)
+
 thesis = custom_target('Thesis pdf',
         command: [
                 find_program('rubber'),
