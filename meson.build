@@ -91,6 +91,22 @@ schema = configure_file(input: 'schema/varnames.json',
         output: 'varnames.json',
         copy: true)
 
+suggest_names_help = custom_target('suggest_names --help',
+        command: [
+                find_program('env'),
+                'COLUMNS=60',
+                'python3',
+                suggest_names / 'suggest_names',
+                '--help'],
+        capture: true,
+        depend_files: [
+                suggest_names / 'suggest_names',
+                suggest_names / 'database.py',
+                suggest_names / 'merge.py',
+                suggest_names / 'suggest.py',
+        ],
+        output: 'suggest_names_help.txt')
+
 thesis = custom_target('Thesis pdf',
         command: [
                 find_program('rubber'),
@@ -107,7 +123,8 @@ thesis = custom_target('Thesis pdf',
         depends: [
             tex_vcs_tag,
             tex_test_list,
-            apt_packages],
+            apt_packages,
+            suggest_names_help],
         depend_files: [
             vim_doc,
             schema,
