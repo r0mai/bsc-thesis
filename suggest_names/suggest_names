@@ -13,11 +13,12 @@ def print_suggestions(databasefiles, filename, line, column):
         database.Database.load_from_file(databasefile)
         for databasefile in databasefiles]
     merged_database = merge.merge_databases(databases)
-    filename = os.path.abspath(filename)
+    absfilename = os.path.abspath(filename)
+    abslocation = absfilename + ':' + str(line) + ':' + str(column)
     location = filename + ':' + str(line) + ':' + str(column)
 
     for variable in merged_database.variables:
-        if variable.location == location:
+        if variable.location == location or variable.location == abslocation:
             print('\n'.join(suggest.suggest_for(merged_database, variable)))
             break
     else:
