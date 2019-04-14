@@ -12,13 +12,13 @@ addons:
       - python3-setuptools
       - libclang-7-dev
       - clang-7
-      - llvm-7
       - llvm-7-dev
       - libboost-all-dev
       - texlive-full
       - rubber
       - wget
       - ca-certificates
+      - jq
 
 before_script:
   - export PATH=$HOME/.local/bin:$PATH

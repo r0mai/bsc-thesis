@@ -73,6 +73,17 @@ tex_test_list = custom_target('Test List',
             'test/robot/suggest-names/resources/DatabaseKeywords.robot',
             'test/robot/suggest-names/libraries/DatabaseLibrary.py'])])
 
+apt_packages = custom_target('Apt Package List',
+        command: [
+                find_program('yq'),
+                '--raw-output',
+                '.addons.apt.packages | .[]',
+                '@INPUT@'
+        ],
+        capture: true,
+        input: '.travis.yml',
+        output: 'apt_packages.txt')
+
 vim_doc = configure_file(input: 'vim/doc/suggest-names.txt',
         output: 'vim-doc.txt',
         copy: true)
@@ -95,7 +106,8 @@ thesis = custom_target('Thesis pdf',
         output: 'thesis.pdf',
         depends: [
             tex_vcs_tag,
-            tex_test_list],
+            tex_test_list,
+            apt_packages],
         depend_files: [
             vim_doc,
             schema,

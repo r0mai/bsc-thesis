@@ -2,3 +2,4 @@ meson
 ninja
 robotframework
 jsonschema
+yq
