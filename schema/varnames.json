@@ -22,7 +22,6 @@
           "type": {
             "type": "string",
             "title": "The Type Schema",
-            "default": "",
             "examples": [
               "std::function<void (void)>"
             ],
@@ -31,7 +30,6 @@
           "name": {
             "type": "string",
             "title": "The Name Schema",
-            "default": "",
             "examples": [
               "f"
             ],
@@ -40,11 +38,10 @@
           "location": {
             "type": "string",
             "title": "The Location Schema",
-            "default": "",
             "examples": [
               "/path/to/include/a.hpp:123:45"
             ],
-            "pattern": "^(.*)[0-9]+:[0-9]+$"
+            "pattern": "^(.*):[0-9]+:[0-9]+$"
           },
           "occurences": {
             "type": "array",
@@ -52,11 +49,10 @@
             "items": {
               "type": "string",
               "title": "The Items Schema",
-              "default": "",
               "examples": [
                 "/path/to/source/a.cpp:12:34"
               ],
-              "pattern": "^(.*)[0-9]+:[0-9]+$"
+              "pattern": "^(.*):[0-9]+:[0-9]+$"
             }
           }
         }
