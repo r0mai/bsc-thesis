@@ -12,7 +12,7 @@ function! s:suggest_names()
   normal wb
   "Ensure that buffer is on-disk before continuing, so that we can validate
   "the contents.
-  write
+  silent write
 
   let l:cursor_pos = getpos(".")
   let l:line = cursor_pos[1]
