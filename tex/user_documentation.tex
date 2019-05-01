@@ -86,6 +86,19 @@ clang++ \
 	/path/to/source.cpp
 \end{lstlisting}
 
+If \lstinline|output-file| is not specified, the output file is derived from the
+output of compilation. For instance:
+
+\begin{lstlisting}[caption={Invocation of Clang with Defaulted Output Filename}]
+clang++ \
+	-fplugin=/path/to/repository/build/libdump_names.so \
+	-c
+	/path/to/source.cpp
+	-o /path/to/output.o
+\end{lstlisting}
+
+Results in \lstinline|/path/to/output/o.names.json|.
+
 In the following sections we will refer to the following example piece of \CC{}
 code:
 
@@ -94,7 +107,7 @@ code:
 Running the Clang-plugin as described above will give us a JSON file containing
 information on the symbols in the program:
 
-\lstinputlisting[language=json, numbers=left, caption=varnames.json]
+\lstinputlisting[language=json, numbers=left, caption=examples.cpp.o.names.json]
 		{example.varnames.json}
 
 By default, all filenames in the output are full paths. To make the output more
@@ -150,6 +163,12 @@ helptags /path/to/repository/vim/doc
 
 Following this, the documentation of the Vim plugin is available through the
 usual commands of Vim, such as \lstinline|:help|.
+
+To configure the path of variable databases, use:
+
+\begin{lstlisting}
+let g:suggest_names_database_path='/path/to/project/builddir'
+\end{lstlisting}
 
 The output of querying the help for \lstinline|:help suggest-names.txt| can be
 found in appendix \ref{appendix:vimplugindoc}.
