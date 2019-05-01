@@ -47,11 +47,11 @@ def main():
     parser = argparse.ArgumentParser(description='Rename variables')
     parser.add_argument('database', nargs='+', type=argparse.FileType('r'),
         help='JSON produced by clang-plugin containing all variables')
-    parser.add_argument('--filename', type=str,
+    parser.add_argument('--filename', type=str, required=True,
         help='Filename containing variable to suggest names for')
-    parser.add_argument('--line', type=int,
+    parser.add_argument('--line', type=int, required=True,
         help='Line number of variable to suggest names for')
-    parser.add_argument('--column', type=int,
+    parser.add_argument('--column', type=int, required=True,
         help='Column number of variable to suggest names for')
     parser.add_argument('--name', type=str, required=True,
         help='New name for the variable')
