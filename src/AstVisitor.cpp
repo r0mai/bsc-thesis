@@ -176,7 +176,7 @@ void dn::AstVisitor::printVariableNames(const std::string& inputFile) const {
 		output << indent(8) << "}";
 	}
 	output << "\n" << indent(4) << "],";
-	output << "\n" << indent(4) <<
-			"\"Filename\": " << "\"" << inputFile << "\"";
+	output << "\n" << indent(4) << "\"Filename\": " << "\""
+			<< normalizeLocation(inputFile, debugPrefixMap) << "\"";
 	output << "\n}\n";
 }
