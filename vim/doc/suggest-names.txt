@@ -15,7 +15,13 @@ with variable suggestions.
 ===========================================================
 COMMANDS                         *vim-suggest-names-commands*
 
+vim-suggest-names provides the following commands:
+
+|:SuggestNames|
+
+-----------------------------------------------------------
                                               *:SuggestNames*
+
 :SuggestNames       Suggest variables for the variable
                     under the cursor.
                     The following maps are provided for the
@@ -28,5 +34,17 @@ COMMANDS                         *vim-suggest-names-commands*
                          variable, so you will be prompted
                          to reload the impacted files.
 
+===========================================================
+OPTIONS                           *vim-suggest-names-options*
+
+|g:suggest_names_database_path|
+
+-----------------------------------------------------------
+*g:suggest_names_database_path*
+
+Path where name databases are stored. This path will be
+recursively globbed in search of suitable jsons.
+
+Default: `$HOME/.suggest_names/`
 ===========================================================
 vim:tw=60:colorcolumn=60:ts=4:ft=help:fen:fdl=0:

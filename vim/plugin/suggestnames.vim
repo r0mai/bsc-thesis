@@ -3,6 +3,7 @@ if exists("g:suggestnames#loaded")
 endif
 let s:suggest_names_path = expand('<sfile>:p:h') . '/../../suggest_names/suggest_names'
 let s:rename_path = expand('<sfile>:p:h') . '/../../suggest_names/suggest_names_rename'
+let s:database_path = get(g:, 'suggest_names_database_path', $HOME . "/.suggest_names")
 let g:suggestnames#loaded = "yes"
 
 function! s:suggest_names()
@@ -18,9 +19,9 @@ function! s:suggest_names()
   let l:column = cursor_pos[2]
   let l:filename = expand("%:p")
 
-  "FIXME: Find this dynamically
-  let l:databasefilename = "varnames.json"
-  let l:suggestions = system(s:suggest_names_path . " " . l:databasefilename . " " . l:filename . " " . l:line . " " . l:column)
+  let l:databasefiles = split(globpath(s:database_path, '**/*.json'), '\n')
+  echomsg "Calculating variable-name suggestions..."
+  let l:suggestions = system(s:suggest_names_path . " " . join(l:databasefiles, " ") . " " . l:filename . " " . l:line . " " . l:column)
 
   below 5 split SuggestNames__
   normal ggdG
@@ -28,11 +29,12 @@ function! s:suggest_names()
   setlocal buftype=nofile
   call append(0, split(l:suggestions, '\v\n'))
   normal gg
-  execute 'nnoremap <buffer> <CR> :SuggestNamesAccept ' . l:filename . ' ' . l:line . ' ' . l:column . ' ' . l:databasefilename . '<CR>'
+  execute 'nnoremap <buffer> <CR> :SuggestNamesAccept ' . l:filename . ' ' . l:line . ' ' . l:column . '<CR>'
 endfunction
 
-function! s:accept_suggestion(filename, line, column, ...)
+function! s:accept_suggestion(filename, line, column)
   let l:line=getline(".")
+  let l:databasefiles = split(globpath(s:database_path, '**/*.json'), '\n')
   echomsg "Renaming variable to: " . l:line
   call system(s:rename_path . " " .
         \ "--filename=" . a:filename .
@@ -40,7 +42,7 @@ function! s:accept_suggestion(filename, line, column, ...)
         \ " --column=" . a:column .
         \ " --name=" . l:line .
         \ " " .
-        \ join(a:000, " "))
+        \ join(l:databasefiles, " "))
   quit
   checktime
 endfunction
