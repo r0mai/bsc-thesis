@@ -40,6 +40,16 @@
 }
 \makeatother
 
+\lstdefinelanguage{vimscript}{
+	morekeywords=[2]{set, helptags, let},
+	alsoletter={:},
+	morekeywords=[3]{rtp},
+	keywordstyle=[3]{\color{red}},
+	morestring=[b]',
+	stringstyle=\color{teal},
+	moredelim=[s][\color{blue}]{g:}{\ }
+}
+
 \lstdefinelanguage{json}{
 	morestring=[b]",
 }

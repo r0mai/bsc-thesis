@@ -156,7 +156,7 @@ command-line tools.
 The Vim plugin can be added to your \lstinline|.vimrc| by adding the following
 two lines:
 
-\begin{lstlisting}
+\begin{lstlisting}[language=vimscript]
 set rtp+=/path/to/repository/vim
 helptags /path/to/repository/vim/doc
 \end{lstlisting}
@@ -166,8 +166,8 @@ usual commands of Vim, such as \lstinline|:help|.
 
 To configure the path of variable databases, use:
 
-\begin{lstlisting}
-let g:suggest_names_database_path='/path/to/project/builddir'
+\begin{lstlisting}[language=vimscript]
+let g:suggest_names_database_path = '/path/to/project/builddir'
 \end{lstlisting}
 
 The output of querying the help for \lstinline|:help suggest-names.txt| can be
