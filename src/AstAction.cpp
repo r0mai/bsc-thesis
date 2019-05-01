@@ -18,7 +18,6 @@ return file.str().str();
 std::unique_ptr<clang::ASTConsumer> dn::Action::CreateASTConsumer(
 		clang::CompilerInstance& ci,
 		llvm::StringRef in) {
-	std::cerr << in.str() << std::endl;
 	auto currentFileName = getCurrentFileName(
 			in, ci.getSourceManager().getFileManager());
 	return std::make_unique<AstConsumer>(ci, currentFileName, outputFilename);
