@@ -50,7 +50,7 @@ The structure of the database can be seen in Figure~\ref{fig:Database}.
 	\caption{Structure of the Database}
 	\begin{center}
 		\begin{tikzpicture}
-			\umlclass[x=0, y=0]{Database}{}{}
+			\umlclass[x=0, y=0]{Database}{filename: string}{}
 			\umlclass[x=5, y=0]{VariableDeclaration}{
 				name: string \\
 				type: string \\
@@ -283,6 +283,10 @@ merged variable as follows:
 	]
 }
 \end{lstlisting}
+Note that while the $input\_database_i$ each have filenames to determine
+whether they are stale, the output of the merge process does not include this
+field. This means that the merging operation is not associative, that is, merged
+databases cannot be merged further.
 
 \subsection{Making Suggestions}
 \label{sec:suggesting}
