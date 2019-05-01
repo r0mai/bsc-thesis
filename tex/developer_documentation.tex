@@ -233,6 +233,21 @@ The database format as described in \fref{sec:dbfmt} was chosen to enable
 merging the databases.
 As the database is merely a list of Variables, each with a type, name location
 and a list of occurences, these can be merged simply.
+To support projects which may rename files during the lifetime of the project,
+we ignore databases that refer to files that no longer exist. These databases
+are referred to as stale.
+
+Given a set of databases $input\_database_1, \ldots, input\_database_m$, we can
+construct the set of non-stale databases as follows:
+\begin{equation}
+	database_1, \ldots, database_n = \left \{
+		\substack {
+			db \mid dn \in input\_database \\
+			\land exists(input\_database.filename)
+		}
+	\right \}
+\end{equation}
+where $exists(filename)$ determines whether the file exists.
 
 Given the following variable:
 \begin{lstlisting}[mathescape, language=json]
@@ -243,8 +258,8 @@ Given the following variable:
 	"occurences": [ $\ldots$ ]
 }
 \end{lstlisting}
-and databases $database_1, \ldots, database_n$, we can construct the merged
-variable as follows:
+and non-stale databases $database_1, \ldots, database_n$, we can construct the
+merged variable as follows:
 
 \begin{lstlisting}[escapeinside={(*}{*)}, language=json]
 {

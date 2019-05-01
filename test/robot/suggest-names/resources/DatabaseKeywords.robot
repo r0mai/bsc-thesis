@@ -17,6 +17,11 @@ Database with one variable
     ${database} =   Make Database  ${variable}
     Append To List      ${databases}  ${database}
 
+Stale Database
+    ${variable} =   Make Variable  int  stale  /non_existent:1:1
+    ${database} =   Make Database  ${variable}  filename="/non_existent"
+    Append To List     ${databases}  ${database}
+
 Database with one variable and one occurence
     ${variable} =   Single Variable  test.cpp:2:1
     ${database} =   Make Database  ${variable}

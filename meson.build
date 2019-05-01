@@ -141,14 +141,14 @@ example_varnames_json = custom_target('Example Variable-names Database',
                 '@OUTPUT@',
                 '-c',
                 '@INPUT@',
-                '-fdebug-prefix-map=' + meson.source_root() + '=.',
+                '-fdebug-prefix-map=' + meson.current_build_dir() + '=.',
                 '-std=c++11',
                 '-o',
                 '/dev/null'],
         depends: [
                 dump_names
         ],
-        input: examples / 'example.cpp',
+        input: example_cpp,
         output: 'example.varnames.json')
 
 example_suggestions = custom_target('Example variable name suggestions',
@@ -156,7 +156,7 @@ example_suggestions = custom_target('Example variable name suggestions',
                 find_program('python3'),
                 suggest_names / 'suggest_names',
                 example_varnames_json,
-                './examples/example.cpp',
+                'example.cpp',
                 '2',
                 '9'
         ],

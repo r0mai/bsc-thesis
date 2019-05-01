@@ -7,22 +7,26 @@ import merge
 import suggest
 import os
 
+def _find_corresponding_varaible(variables, filename, line, column):
+    for variable in variables:
+        location_components = variable.location.split(':')
+        location_components[1] = int(location_components[1])
+        location_components[2] = int(location_components[2])
+        if os.path.samefile(location_components[0], filename):
+            if [line, column] == location_components[1:]:
+                return variable
+    else:
+        raise ValueError('Variable to suggest for is not in merged database')
 
 def print_suggestions(databasefiles, filename, line, column):
     databases = [
         database.Database.load_from_file(databasefile)
         for databasefile in databasefiles]
     merged_database = merge.merge_databases(databases)
-    absfilename = os.path.abspath(filename)
-    abslocation = absfilename + ':' + str(line) + ':' + str(column)
-    location = filename + ':' + str(line) + ':' + str(column)
 
-    for variable in merged_database.variables:
-        if variable.location == location or variable.location == abslocation:
-            print('\n'.join(suggest.suggest_for(merged_database, variable)))
-            break
-    else:
-        raise ValueError('Variable to suggest for is not in merged database')
+    variable = _find_corresponding_varaible(merged_database.variables,
+            filename, line, column)
+    print('\n'.join(suggest.suggest_for(merged_database, variable)))
 
 
 def main():

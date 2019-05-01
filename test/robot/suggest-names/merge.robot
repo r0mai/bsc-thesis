@@ -16,8 +16,26 @@ Empty database and empty database merge to empty database
      When Databases are merged
      Then The merged database has ${0} variables
 
+Stale database and stale database merge to empty database
+    Given Stale database
+      And Stale database
+     When Databases are merged
+     Then The merged database has ${0} variables
+
+Stale database and empty database merge to empty database
+    Given Stale database
+      And Empty database
+     When Databases are merged
+     Then The merged database has ${0} variables
+
 Empty database and single variable database merge to single variable database
     Given Empty database
+      And Database with one variable
+     When Databases are merged
+     Then The merged database has ${1} variables
+
+Stale database and single variable database merge to single variable database
+    Given Stale database
       And Database with one variable
      When Databases are merged
      Then The merged database has ${1} variables

@@ -2,10 +2,14 @@ from database import Database
 from variable import Variable
 
 import itertools
+import os
 
 
 def merge_databases(databases):
-    variables = merge_variables([database.variables for database in databases])
+    current_databases = [database for database in databases if
+            os.path.exists(database.filename)]
+    variables = merge_variables(
+            [database.variables for database in current_databases])
     return Database(variables=variables)
 
 
