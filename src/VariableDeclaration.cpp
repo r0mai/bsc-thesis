@@ -2,8 +2,24 @@
 #include <clang/Basic/SourceLocation.h>
 
 #include <utility>
+#include <iostream>
+
+#include <limits.h>
+#include <stdlib.h>
 
 namespace {
+
+std::string realPath(std::string path) {
+	char* realPathResult = ::realpath(path.c_str(), nullptr);
+	if (!realPathResult) {
+		std::cerr << ::strerror(errno) << std::endl;
+		return path;
+	}
+	std::string result;
+	result = realPathResult;
+	free(realPathResult);
+	return result;
+}
 
 std::string sourceLocationToString(
 		const clang::SourceLocation& location,
@@ -15,7 +31,7 @@ std::string sourceLocationToString(
 	if (file) {
 		fullPath = file->tryGetRealPathName().str();
 	} else {
-		fullPath = presumedLocation.getFilename();
+		fullPath = realPath(presumedLocation.getFilename());
 	}
 	return fullPath
 			+ ':' + std::to_string(presumedLocation.getLine())
