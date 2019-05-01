@@ -22,7 +22,7 @@ public:
 	bool VisitDecl(clang::Decl* decl);
 	bool VisitStmt(clang::Stmt* stmt);
 
-	void printVariableNames() const;
+	void printVariableNames(const std::string& inputFile) const;
 
 private:
 

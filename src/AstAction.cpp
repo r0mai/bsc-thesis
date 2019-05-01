@@ -3,10 +3,25 @@
 #include <iostream>
 #include <algorithm>
 
+namespace {
+
+std::string getCurrentFileName(
+		const llvm::StringRef& inputFile,
+		const clang::FileManager& fileManager) {
+	clang::SmallString<128> file = inputFile;
+	fileManager.makeAbsolutePath(file);
+return file.str().str();
+}
+
+} // unnames namespace
+
 std::unique_ptr<clang::ASTConsumer> dn::Action::CreateASTConsumer(
 		clang::CompilerInstance& ci,
-		llvm::StringRef) {
-	return std::make_unique<AstConsumer>(ci, outputFilename);
+		llvm::StringRef in) {
+	std::cerr << in.str() << std::endl;
+	auto currentFileName = getCurrentFileName(
+			in, ci.getSourceManager().getFileManager());
+	return std::make_unique<AstConsumer>(ci, currentFileName, outputFilename);
 }
 
 bool dn::Action::ParseArgs(const clang::CompilerInstance& ci,

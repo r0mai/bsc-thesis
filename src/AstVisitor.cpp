@@ -135,7 +135,7 @@ bool dn::AstVisitor::VisitStmt(clang::Stmt* stmt) {
 	return true;
 }
 
-void dn::AstVisitor::printVariableNames() const {
+void dn::AstVisitor::printVariableNames(const std::string& inputFile) const {
 	std::ofstream output{outputFile};
 	output << "{\n";
 	output << indent(4) << '"' << "Variables" << '"' << ": [";
@@ -175,6 +175,8 @@ void dn::AstVisitor::printVariableNames() const {
 		output << "\n" << indent(12) << "]\n";
 		output << indent(8) << "}";
 	}
-	output << "\n" << indent(4) << "]\n";
-	output << "}\n";
+	output << "\n" << indent(4) << "],";
+	output << "\n" << indent(4) <<
+			"\"Filename\": " << "\"" << inputFile << "\"";
+	output << "\n}\n";
 }

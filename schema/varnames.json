@@ -3,7 +3,8 @@
   "type": "object",
   "title": "Schema for variable-name database",
   "required": [
-    "Variables"
+    "Variables",
+    "Filename"
   ],
   "properties": {
     "Variables": {
@@ -26,9 +27,7 @@
           },
           "name": {
             "type": "string",
-            "examples": [
-              "f"
-            ],
+            "examples": [ "f" ],
             "pattern": "^(.*)$"
           },
           "location": {
@@ -50,6 +49,11 @@
           }
         }
       }
+    },
+    "Filename": {
+      "type": "string",
+      "examples": [ "/dev/null" ],
+      "pattern": "^(.*)$"
     }
   }
 }
