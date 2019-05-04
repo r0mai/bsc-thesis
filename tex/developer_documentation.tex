@@ -88,70 +88,103 @@ we also need to merge the list of occurences.
 
 \section{Clang-plugin Architecture}
 
-\begin{figure}
-	\label{fig:Plugin}
-	\caption{Structure of the Clang-plugin}
-	\begin{center}
-		\begin{tikzpicture}
-			\begin{umlpackage}{clang}
-				\umlsimpleclass[x=0, y=0]{FrontendPluginRegistry};
-				\umlsimpleclass[x=5, y=0]{PluginASTAction};
-				\umlsimpleclass[x=0, y=-2]{ASTConsumer};
-				\umlsimpleclass[x=5, y=-2, template={Derived}]{RecursiveASTVisitor};
-			\end{umlpackage}
-			\begin{umlpackage}{dn}
-				\umlclass[x=5, y=-7]{Action}{
-					std::unique\_ptr$<$Consumer$>$ CreateASTConsumer(...) \\
-					bool ParseArgs(...) \\
-					ActionType getActionType()
-				}{};
-				\umlinherit{Action}{PluginASTAction};
-				\umlclass[x=0, y=-10]{Consumer}{
-					void HandleTranslationUnit(...)}{};
-				\umlinherit{Consumer}{ASTConsumer}
-				\stereorelation{\umluniassoc}
-						{creates}{mult1=1, mult2=1}{Action}{Consumer};
-				\umlclass[x=7, y=-10]{Visitor}{
-					bool VisitDecl(Decl*) \\
-					bool VisitStmt(Stmt*)
-				}{};
-				\umlinherit{Visitor}{RecursiveASTVisitor};
-				\stereorelation{\umluniassoc}
-						{invokes}{mult1=1, mult2=1}{Consumer}{Visitor};
-				\umlclass[x=0, y=-13]{VariableDeclaration}{
-					std::string getLocation(SourceManager\&) \\
-					void addOccurence(...)
-				}{
-					std::string name, type \\
-					SourceLocation location \\
-					std::vector$<$std::string$>$ occurences
-				};
-				\stereorelation{\umluniassoc}
-						{generates}{mult1=1, mult2=*}{Visitor}{VariableDeclaration};
-			\end{umlpackage}
-		\end{tikzpicture}
-	\end{center}
-\end{figure}
-
 The clang-plugin contains all the code needed for traversing the Abstract
 Syntax Tree, along with the routines needed for dumping the names that occur in
 the codebase to a JSON file. All code in the clang-plugin is defined in
 \lstinline|namespace dn|.
 
+\subsection{Plugin}
 The plugin first starts by loading \lstinline|Action| into
-\lstinline|clang::FrontEndPluginRegistry|. \lstinline|Action| can then parse the
+\lstinline|clang::FrontEndPluginRegistry|.
+
+\begin{figure}[h]
+	\label{fig:actionload}
+	\caption{Loading the AST Action}
+	\centering
+	\begin{tikzpicture}
+		\begin{umlpackage}{clang}
+			\umlsimpleclass[x=0, y=0, width=6cm]{FrontendPluginRegistry}
+		\end{umlpackage}
+		\begin{umlpackage}{dn}
+			\umlsimpleclass[x=0, y=-4, width=6cm]{ASTAction}
+		\end{umlpackage}
+		\stereorelation{\umluniassoc}{register}{mult1=1, mult2=1, name=register}
+				{ASTAction}{FrontendPluginRegistry};
+		\umlnote[x=+5, y=-2, width=8cm]{register-1}
+				{\lstinline|FrontendPluginRegistry::Add<dn::Action> \_\{\}|}
+	\end{tikzpicture}
+\end{figure}
+
+\subsection{Action}
+\lstinline|Action| can then parse the
 command-line arguments passed to Clang, so that it can deduce the filename that
 was set for storing the output JSON. \lstinline|Action| uses
 \lstinline|clang::PluginASTAction::ActionType Action::getActionType()| to inform
 Clang that \lstinline|Action| should not inhibit compilation, and should be
 invoked after the compilation has been done.
 
+\begin{figure}[h]
+	\label{fig:action}
+	\caption{Action Collaboration Diagram}
+	\centering
+	\begin{tikzpicture}
+		\begin{umlpackage}{clang}
+			\umlclass[x=0, y=0, type=abstract]{PluginASTAction}{}{
+				+\umlvirt{ASTConsumer* CreateASTConsumer($\ldots$)} \\
+				+\umlvirt{bool ParseArgs($\ldots$)} \\
+				+\umlvirt{ActionType getActionType()}
+			}
+		\end{umlpackage}
+		\begin{umlpackage}{dn}
+			\umlclass[x=0, y=-5]{Action}{
+				- boost::optional<string> outputFilename
+			}{
+				+\umlvirt{ASTConsumer* CreateASTConsumer($\ldots$)} \\
+				+\umlvirt{bool ParseArgs($\ldots$)} \\
+				+\umlvirt{ActionType getActionType()}
+			}
+			\umlinherit{Action}{PluginASTAction}
+			\umlsimpleclass[x=7.5, y=-5]{Consumer}
+			\stereorelation{\umluniassoc}{creates}{mult1=1, mult2=1}
+					{Action}{Consumer};
+		\end{umlpackage}
+	\end{tikzpicture}
+\end{figure}
+
+\subsection{Consumer}
 Clang then loads the \lstinline|Consumer| as specifed by
 \lstinline|Action::CreateASTConsumer|, which can then proceed with traversing
 the Abstract Syntax Tree of the given Translation Unit.
 
 \lstinline|Consumer|'s sole responsibility is to invoke the \lstinline|Visitor|
 when invoked by Clang.
+
+\begin{figure}[h]
+	\label{fig:Consumer}
+	\caption{Consumer Collaboration Diagram}
+	\centering
+	\begin{tikzpicture}
+		\begin{umlpackage}{clang}
+			\umlclass[x=0, y=0]{ASTConsumer}{}{
+				+\umlvirt{void HandleTranslationUnit()}
+			}
+		\end{umlpackage}
+		\begin{umlpackage}{dn}
+			\umlclass[x=0, y=-5]{Consumer}{
+				clang::CompilerInstance\& ci\\
+				string inputFile \\
+				string outputFile \\
+				map<string, string> debugPrefixMap
+			}{
+				-\umlvirt{void HandleTranslationUnit()}
+			}
+			\umlsimpleclass[x=6.5, y=-5]{Visitor}
+			\stereorelation{\umluniassoc}{calls}{mult1=1, mult2=1}
+					{Consumer}{Visitor}
+		\end{umlpackage}
+		\umlinherit{Consumer}{ASTConsumer}
+	\end{tikzpicture}
+\end{figure}
 
 \section{Implementation}
 \subsection{Visiting the Abstract Syntax Tree}
@@ -160,9 +193,55 @@ There are two main tasks to accomplish when traversing the Abstract Syntax Tree:
 the first is to record all variable declarations, the second is to record all
 references to these variables.
 
-Both of these tasks are accomplised by the \lstinline|Visitor| class.
+Both of these tasks are accomplished by the \lstinline|Visitor| class.
 To facilitate these tasks, Clang's \lstinline|RecursiveASTVisitor| provides two
 functions for us to override: \lstinline|VisitDecl| and \lstinline|VisitStmt|.
+
+A diagram of the involved classes can be seen in \fref{fig:Visitor}.
+
+\begin{figure}[h]
+	\label{fig:Visitor}
+	\caption{Visitor Collaboration Diagram}
+	\centering
+	\begin{tikzpicture}
+		\begin{umlpackage}{clang}
+			\umlclass[x=0, y=0, template={Derived}]{RecursiveASTVisitor}{}{
+				+\umlvirt{bool VisitDecl($\ldots$)} \\
+				+\umlvirt{bool VisitDecl($\ldots$)}
+			}
+			\umlsimpleclass[x=6.8, y=0]{SourceLocation}
+		\end{umlpackage}
+		\begin{umlpackage}{dn}
+			\umlclass[x=0, y=-6.5]{Visitor}{
+				-string outputFile \\
+				-map<string, string> debugPrefixMap \\
+			}{
+				+\umlvirt{bool VisitDecl($\ldots$)} \\
+				+\umlvirt{bool VisitDecl($\ldots$)} \\
+				+void printVariableNames($\ldots$) \\
+				-void visitVariableDeclaration($\ldots$) \\
+				-void visitFieldDeclaration($\ldots$) \\
+				-void visitDecl$\ldots$ReferenceExpr$\ldots$($\ldots$) \\
+				-void visitMemberExpression($\ldots$) \\
+				-void addOccurence($\ldots$)
+			}
+			\umlclass[x=6.8, y=-6.5]{VariableDeclaration}{
+				-string name \\
+				-string type \\
+				-vector<string> occurences
+			}{
+				+string getName() \\
+				+string getType() \\
+				+string getLocation($\ldots$) \\
+				+bool operator==($\ldots$) \\
+				+void addOccurence($\ldots$)
+			}
+			\umlcompo[mult1=1, mult2=*]{Visitor}{VariableDeclaration}
+			\umlcompo[mult1=1, mult2=*]{VariableDeclaration}{SourceLocation}
+		\end{umlpackage}
+		\umlinherit{Visitor}{RecursiveASTVisitor}
+	\end{tikzpicture}
+\end{figure}
 
 \lstinline|VisitDecl| is used to visit all declarations as described in
 \fref{sec:visitdecl}, whereas \lstinline|VisitStmt| is used to visit all

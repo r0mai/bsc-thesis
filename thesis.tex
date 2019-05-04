@@ -1,5 +1,6 @@
 \documentclass[a4paper,12pt]{report}
 \usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage[english]{babel}
 \usepackage{setspace}
@@ -16,6 +17,7 @@
 \usepackage{fancyref}
 \usepackage{amsmath}
 \usepackage[section]{placeins}
+\usepackage{float}
 \usepackage[toc, page]{appendix}
 \usepackage{paralist}
 
@@ -53,6 +55,14 @@
 \lstdefinelanguage{json}{
 	morestring=[b]",
 }
+
+\makeatletter
+\AtBeginDocument{%
+	\expandafter\renewcommand\expandafter\subsection\expandafter{%
+		\expandafter\@fb@secFB\subsection
+	}%
+}
+\makeatother
 
 \frenchspacing
 \onehalfspacing
