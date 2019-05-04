@@ -17,6 +17,14 @@ The structure of the database can be seen in Figure~\ref{fig:Database}.
 	#1[arg1=$\ll$#2$\gg$, pos1=0.5]{#4}{#5}
 }
 
+\newcommand{\umlprivate}{%
+	\makebox[\widthof{=}]{--}%
+}
+
+\newcommand{\umlpublic}{%
+	\makebox[\widthof{=}]{+}%
+}
+
 \begin{figure}[h]
 	\label{fig:Arch}
 	\caption{Overview of Architectural Elements}
@@ -136,11 +144,11 @@ invoked after the compilation has been done.
 		\end{umlpackage}
 		\begin{umlpackage}{dn}
 			\umlclass[x=0, y=-5, anchor=west]{Action}{
-				- boost::optional<string> outputFilename
+				\umlprivate{}boost::optional<string> outputFilename
 			}{
-				+\umlvirt{ASTConsumer* CreateASTConsumer($\ldots$)} \\
-				+\umlvirt{bool ParseArgs($\ldots$)} \\
-				+\umlvirt{ActionType getActionType()}
+				\umlpublic{}\umlvirt{ASTConsumer* CreateASTConsumer($\ldots$)} \\
+				\umlpublic{}\umlvirt{bool ParseArgs($\ldots$)} \\
+				\umlpublic{}\umlvirt{ActionType getActionType()}
 			}
 			\umlinherit[geometry=|-|, arm1=0]{Action}{PluginASTAction}
 			\umlsimpleclass[x=13, y=-5, anchor=east]{Consumer}
@@ -170,17 +178,17 @@ file.
 	\begin{tikzpicture}
 		\begin{umlpackage}{clang}
 			\umlclass[x=0, y=0, anchor=north west]{ASTConsumer}{}{
-				+\umlvirt{void HandleTranslationUnit()}
+				\umlpublic{}\umlvirt{void HandleTranslationUnit()}
 			}
 		\end{umlpackage}
 		\begin{umlpackage}{dn}
 			\umlclass[x=0, y=-6, anchor=west]{Consumer}{
-				-clang::CompilerInstance\& ci\\
-				-string inputFile \\
-				-string outputFile \\
-				-map<string, string> debugPrefixMap
+				\umlprivate{}clang::CompilerInstance\& ci\\
+				\umlprivate{}string inputFile \\
+				\umlprivate{}string outputFile \\
+				\umlprivate{}map<string, string> debugPrefixMap
 			}{
-				-\umlvirt{void HandleTranslationUnit()}
+				\umlprivate{}\umlvirt{void HandleTranslationUnit()}
 			}
 			\umlsimpleclass[x=11, y=-6, anchor=east]{Visitor}
 			\stereorelation{\umluniassoc}{calls}{mult1=1, mult2=1}
@@ -211,9 +219,9 @@ A diagram of the involved classes can be seen in \fref{fig:Visitor}.
 		\begin{umlpackage}{clang}
 			\umlclass[x=0, y=0, anchor=north west, template={Derived}]
 				{RecursiveASTVisitor}{}{
-				+bool TraverseDecl($\ldots$) \\
-				+\umlvirt{bool VisitDecl($\ldots$)} \\
-				+\umlvirt{bool VisitDecl($\ldots$)}
+					\umlpublic{}bool TraverseDecl($\ldots$) \\
+					\umlpublic{}\umlvirt{bool VisitDecl($\ldots$)} \\
+					\umlpublic{}\umlvirt{bool VisitDecl($\ldots$)}
 			}
 			\umlsimpleclass[x=13.5, y=0, anchor=north east]{SourceLocation}
 		\end{umlpackage}
@@ -222,25 +230,25 @@ A diagram of the involved classes can be seen in \fref{fig:Visitor}.
 				-string outputFile \\
 				-map<string, string> debugPrefixMap \\
 			}{
-				+\umlvirt{bool VisitDecl($\ldots$)} \\
-				+\umlvirt{bool VisitDecl($\ldots$)} \\
-				+void printVariableNames($\ldots$) \\
-				-void visitVariableDeclaration($\ldots$) \\
-				-void visitFieldDeclaration($\ldots$) \\
-				-void visitDecl$\ldots$ReferenceExpr$\ldots$($\ldots$) \\
-				-void visitMemberExpression($\ldots$) \\
-				-void addOccurence($\ldots$)
+				\umlpublic{}\umlvirt{bool VisitDecl($\ldots$)} \\
+				\umlpublic{}\umlvirt{bool VisitDecl($\ldots$)} \\
+				\umlpublic{}void printVariableNames($\ldots$) \\
+				\umlprivate{}void visitVariableDeclaration($\ldots$) \\
+				\umlprivate{}void visitFieldDeclaration($\ldots$) \\
+				\umlprivate{}void visitDecl$\ldots$Ref$\ldots$Expr$\ldots$($\ldots$) \\
+				\umlprivate{}void visitMemberExpression($\ldots$) \\
+				\umlprivate{}void addOccurence($\ldots$)
 			}
 			\umlclass[x=13.5, y=-5, anchor=north east]{VariableDeclaration}{
-				-string name \\
-				-string type \\
-				-vector<string> occurences
+				\umlprivate{}string name \\
+				\umlprivate{}string type \\
+				\umlprivate{}vector<string> occurences
 			}{
-				+string getName() \\
-				+string getType() \\
-				+string getLocation($\ldots$) \\
-				+bool operator==($\ldots$) \\
-				+void addOccurence($\ldots$)
+				\umlpublic{}string getName() \\
+				\umlpublic{}string getType() \\
+				\umlpublic{}string getLocation($\ldots$) \\
+				\umlpublic{}bool operator==($\ldots$) \\
+				\umlpublic{}void addOccurence($\ldots$)
 			}
 			\umlcompo[mult1=1, mult2=*, anchor2=-170]
 					{Visitor}{VariableDeclaration}
