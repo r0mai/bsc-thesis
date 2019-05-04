@@ -401,10 +401,10 @@ looking up all variables that have the same type as the variable we are
 suggesting names for. Let's call the variable we are suggesting a new name for
 $variable$. The set of names then becomes:
 
-\[
+\begin{equation}
 	\left \{ v.name
 			\mid v \in database.variables \land v.type = variable.type \right \}
-\]
+\end{equation}
 We also assign a weight to these names based on how frequently they occur.
 
 \subsection{Renaming}
@@ -414,12 +414,12 @@ rename, the declaration of the variable (or field), and at all occurences.
 This is implemented in the Python script \lstinline|suggest_names_rename|.
 
 The first thing this script needs to do, is load and merge all the databases,
-so that we can rename occurences of a variable located in a different file.
+so that we can rename occurences of a variable located in different files.
 
 Care must be taken when there are multiple references to a variable in the same
 line. If no two references occur in the same line, we can simply go to each
 location and change the line and change the old name to the new name, changing
 the length of the line as necessary. If there are multiple occurences in the
 same line however, changing the occurences left-to-right would invalidate the
-column index stores by the next occurence, so we have to perform each rename in
+column index stored by the next occurence, so we have to perform each rename in
 the same line right-to-left.
