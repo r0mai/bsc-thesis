@@ -146,13 +146,13 @@ CMAKE_CXX_FLAGS='-fplugin=/path/to/libdump_names.so'
 \end{lstlisting}
 
 For instance, when bootstrapping a project, instead of
-\begin{lstlisting}[caption={CMake Invocation without the Plugin}]
+\begin{lstlisting}[caption={CMake Invocation without the Plugin}, language=bash]
 mkdir build
 cd build
 cmake -G "Ninja" ..
 \end{lstlisting}
 do
-\begin{lstlisting}[caption={CMake Invocation with the Plugin}]
+\begin{lstlisting}[caption={CMake Invocation with the Plugin}, language=bash]
 mkdir build
 cd build
 cmake -G "Ninja" \
