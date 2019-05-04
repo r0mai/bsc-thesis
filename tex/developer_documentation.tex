@@ -157,7 +157,11 @@ Clang then loads the \lstinline|Consumer| as specifed by
 the Abstract Syntax Tree of the given Translation Unit.
 
 \lstinline|Consumer|'s sole responsibility is to invoke the \lstinline|Visitor|
-when invoked by Clang.
+when invoked by Clang. This is done in
+\lstinline|Consumer::HandleTranslationUnit|, by first constructing a
+\lstinline|Visitor|, calling it's \lstinline|TraversDecl| function with the
+current translation units declaration, then printing the result to the output
+file.
 
 \begin{figure}[h]
 	\label{fig:Consumer}
@@ -170,7 +174,7 @@ when invoked by Clang.
 			}
 		\end{umlpackage}
 		\begin{umlpackage}{dn}
-			\umlclass[x=0, y=-5]{Consumer}{
+			\umlclass[x=0, y=-4.5]{Consumer}{
 				clang::CompilerInstance\& ci\\
 				string inputFile \\
 				string outputFile \\
@@ -178,7 +182,7 @@ when invoked by Clang.
 			}{
 				-\umlvirt{void HandleTranslationUnit()}
 			}
-			\umlsimpleclass[x=6.5, y=-5]{Visitor}
+			\umlsimpleclass[x=6.5, y=-4.5]{Visitor}
 			\stereorelation{\umluniassoc}{calls}{mult1=1, mult2=1}
 					{Consumer}{Visitor}
 		\end{umlpackage}
@@ -206,6 +210,7 @@ A diagram of the involved classes can be seen in \fref{fig:Visitor}.
 	\begin{tikzpicture}
 		\begin{umlpackage}{clang}
 			\umlclass[x=0, y=0, template={Derived}]{RecursiveASTVisitor}{}{
+				+bool TraverseDecl($\ldots$) \\
 				+\umlvirt{bool VisitDecl($\ldots$)} \\
 				+\umlvirt{bool VisitDecl($\ldots$)}
 			}
