@@ -250,7 +250,7 @@ construct the set of non-stale databases as follows:
 where $exists(filename)$ determines whether the file exists.
 
 Given the following variable:
-\begin{lstlisting}[mathescape, language=json]
+\begin{lstlisting}[mathescape, language=json, caption={Example Variable}]
 {
 	"type": TYPE,
 	"name": NAME,
@@ -261,7 +261,8 @@ Given the following variable:
 and non-stale databases $database_1, \ldots, database_n$, we can construct the
 merged variable as follows:
 
-\begin{lstlisting}[escapeinside={(*}{*)}, language=json]
+\begin{lstlisting}[escapeinside={(*}{*)}, language=json,
+	caption={Merged Variable}]
 {
 	"type": TYPE,
 	"name": NAME,
