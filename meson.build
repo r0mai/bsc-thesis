@@ -200,5 +200,6 @@ thesis = custom_target('Thesis pdf',
                 'tex/user_documentation.tex',
                 'tex/developer_documentation.tex',
                 'tex/testing.tex',
+                'tex/closing.tex',
                 'tex/bibliography.bib',
                 'tex/appendix.tex'])])
