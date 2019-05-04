@@ -17,53 +17,49 @@ The structure of the database can be seen in Figure~\ref{fig:Database}.
 	#1[arg1=$\ll$#2$\gg$, pos1=0.5]{#4}{#5}
 }
 
-\begin{figure}
+\begin{figure}[h]
 	\label{fig:Arch}
 	\caption{Overview of Architectural Elements}
-	\begin{center}
-		\begin{tikzpicture}
+	\centering
+	\begin{tikzpicture}
+		\umlsimpleclass[x=0, y=0]{header}{}{}
+		\umlsimpleclass[x=0, y=-3]{source}{}{}
+		\umlsimpleclass[x=5, y=-3]{clang}{}{}
+		\umlsimpleclass[x=5, y=0]{plugin}{}{}
+		\umlsimpleclass[x=10, y=0]{database}{}{}
+		\umlsimpleclass[x=10, y=-3]{frontend}{}{}
 
-			\umlclass[x=0, y=0]{header}{}{}
-			\umlclass[x=0, y=-3]{source}{}{}
-			\umlclass[x=5, y=-3]{clang}{}{}
-			\umlclass[x=5, y=0]{plugin}{}{}
-			\umlclass[x=10, y=0]{database}{}{}
-			\umlclass[x=10, y=-3]{frontend}{}{}
-
-			\stereorelation{\umlaggreg}
-					{includes}{mult1=*, mult2=*}{source}{header}
-			\stereorelation{\umluniassoc}
-					{compiles}{mult1=1, mult2=*}{clang}{source}
-			\stereorelation{\umluniassoc}
-					{invokes}{mult1=1, mult2=1}{clang}{plugin}
-			\stereorelation{\umluniassoc}
-					{produces}{}{plugin}{database}
-			\stereorelation{\umluniassoc}
-					{loads}{mult1=1, mult2=*}{frontend}{database}
-
-		\end{tikzpicture}
-	\end{center}
+		\stereorelation{\umlaggreg}
+				{includes}{mult1=*, mult2=*}{source}{header}
+		\stereorelation{\umluniassoc}
+				{compiles}{mult1=1, mult2=*}{clang}{source}
+		\stereorelation{\umluniassoc}
+				{invokes}{mult1=1, mult2=1}{clang}{plugin}
+		\stereorelation{\umluniassoc}
+				{produces}{}{plugin}{database}
+		\stereorelation{\umluniassoc}
+				{loads}{mult1=1, mult2=*}{frontend}{database}
+	\end{tikzpicture}
 \end{figure}
 
-\begin{figure}
+\begin{figure}[h]
 	\label{fig:Database}
 	\caption{Structure of the Database}
-	\begin{center}
-		\begin{tikzpicture}
-			\umlclass[x=0, y=0]{Database}{filename: string}{}
-			\umlclass[x=5, y=0]{VariableDeclaration}{
-				name: string \\
-				type: string \\
-				location: string
-			}{}
-			\umlclass[x=5, y=-5]{VariableOccurence}{
-				location: string
-			}
+	\centering
+	\begin{tikzpicture}
+		\umlclass[x=0, y=0, anchor=north west]{Database}{filename: string}{}
+		\umlclass[x=10, y=0, anchor=north east]{VariableDeclaration}{
+			+name: string \\
+			+type: string \\
+			+location: string
+		}{}
+		\umlclass[x=10, y=-4, anchor=north east]{VariableOccurence}{
+			+location: string
+		}
 
-			\umlcompo[mult1=1, mult2=*]{Database}{VariableDeclaration}
-			\umlcompo[mult1=1, mult2=*]{VariableDeclaration}{VariableOccurence}
-		\end{tikzpicture}
-	\end{center}
+		\umlcompo[mult1=1, mult2=*, anchor1=-16]{Database}{VariableDeclaration}
+		\umlcompo[mult1=1, mult2=*, anchor2=96]{VariableDeclaration}{VariableOccurence}
+	\end{tikzpicture}
 \end{figure}
 
 \subsection{Database Format}
@@ -103,14 +99,15 @@ The plugin first starts by loading \lstinline|Action| into
 	\centering
 	\begin{tikzpicture}
 		\begin{umlpackage}{clang}
-			\umlsimpleclass[x=0, y=0, width=6cm]{FrontendPluginRegistry}
+			\umlsimpleclass[x=0, y=0, width=6cm, anchor=north west]
+					{FrontendPluginRegistry}
 		\end{umlpackage}
 		\begin{umlpackage}{dn}
-			\umlsimpleclass[x=0, y=-4, width=6cm]{ASTAction}
+			\umlsimpleclass[x=0, y=-5, width=6cm, anchor=south west]{ASTAction}
 		\end{umlpackage}
 		\stereorelation{\umluniassoc}{register}{mult1=1, mult2=1, name=register}
 				{ASTAction}{FrontendPluginRegistry};
-		\umlnote[x=+5, y=-2, width=8cm]{register-1}
+		\umlnote[x=8, y=-2.5, width=8cm]{register-1}
 				{\lstinline|FrontendPluginRegistry::Add<dn::Action> \_\{\}|}
 	\end{tikzpicture}
 \end{figure}
@@ -129,24 +126,25 @@ invoked after the compilation has been done.
 	\centering
 	\begin{tikzpicture}
 		\begin{umlpackage}{clang}
-			\umlclass[x=0, y=0, type=abstract]{PluginASTAction}{}{
+			\umlclass[x=0, y=0, type=abstract, anchor=west]
+			{PluginASTAction}{}{
 				+\umlvirt{ASTConsumer* CreateASTConsumer($\ldots$)} \\
 				+\umlvirt{bool ParseArgs($\ldots$)} \\
 				+\umlvirt{ActionType getActionType()}
 			}
-			\umlsimpleclass[x=6.5, y=0]{ASTConsumer}
+			\umlsimpleclass[x=13, y=0, anchor=east]{ASTConsumer}
 		\end{umlpackage}
 		\begin{umlpackage}{dn}
-			\umlclass[x=0, y=-5]{Action}{
+			\umlclass[x=0, y=-5, anchor=west]{Action}{
 				- boost::optional<string> outputFilename
 			}{
 				+\umlvirt{ASTConsumer* CreateASTConsumer($\ldots$)} \\
 				+\umlvirt{bool ParseArgs($\ldots$)} \\
 				+\umlvirt{ActionType getActionType()}
 			}
-			\umlinherit{Action}{PluginASTAction}
-			\umlsimpleclass[x=7.5, y=-5]{Consumer}
-			\umlinherit[geometry=|-|]{Consumer}{ASTConsumer}
+			\umlinherit[geometry=|-|, arm1=0]{Action}{PluginASTAction}
+			\umlsimpleclass[x=13, y=-5, anchor=east]{Consumer}
+			\umlinherit[geometry=|-|, arm1=0]{Consumer}{ASTConsumer}
 			\stereorelation{\umluniassoc}{creates}{mult1=1, mult2=1}
 					{Action}{Consumer};
 		\end{umlpackage}
@@ -171,12 +169,12 @@ file.
 	\centering
 	\begin{tikzpicture}
 		\begin{umlpackage}{clang}
-			\umlclass[x=0, y=0]{ASTConsumer}{}{
+			\umlclass[x=0, y=0, anchor=north west]{ASTConsumer}{}{
 				+\umlvirt{void HandleTranslationUnit()}
 			}
 		\end{umlpackage}
 		\begin{umlpackage}{dn}
-			\umlclass[x=0, y=-4.5]{Consumer}{
+			\umlclass[x=0, y=-6, anchor=west]{Consumer}{
 				-clang::CompilerInstance\& ci\\
 				-string inputFile \\
 				-string outputFile \\
@@ -184,11 +182,11 @@ file.
 			}{
 				-\umlvirt{void HandleTranslationUnit()}
 			}
-			\umlsimpleclass[x=6.5, y=-4.5]{Visitor}
+			\umlsimpleclass[x=11, y=-6, anchor=east]{Visitor}
 			\stereorelation{\umluniassoc}{calls}{mult1=1, mult2=1}
 					{Consumer}{Visitor}
 		\end{umlpackage}
-		\umlinherit{Consumer}{ASTConsumer}
+		\umlinherit[geometry=|-|, arm1=0]{Consumer}{ASTConsumer}
 	\end{tikzpicture}
 \end{figure}
 
@@ -211,15 +209,16 @@ A diagram of the involved classes can be seen in \fref{fig:Visitor}.
 	\centering
 	\begin{tikzpicture}
 		\begin{umlpackage}{clang}
-			\umlclass[x=0, y=0, template={Derived}]{RecursiveASTVisitor}{}{
+			\umlclass[x=0, y=0, anchor=north west, template={Derived}]
+				{RecursiveASTVisitor}{}{
 				+bool TraverseDecl($\ldots$) \\
 				+\umlvirt{bool VisitDecl($\ldots$)} \\
 				+\umlvirt{bool VisitDecl($\ldots$)}
 			}
-			\umlsimpleclass[x=6.8, y=0]{SourceLocation}
+			\umlsimpleclass[x=13.5, y=0, anchor=north east]{SourceLocation}
 		\end{umlpackage}
 		\begin{umlpackage}{dn}
-			\umlclass[x=0, y=-6.5]{Visitor}{
+			\umlclass[x=0, y=-5, anchor=north west]{Visitor}{
 				-string outputFile \\
 				-map<string, string> debugPrefixMap \\
 			}{
@@ -232,7 +231,7 @@ A diagram of the involved classes can be seen in \fref{fig:Visitor}.
 				-void visitMemberExpression($\ldots$) \\
 				-void addOccurence($\ldots$)
 			}
-			\umlclass[x=6.8, y=-6.5]{VariableDeclaration}{
+			\umlclass[x=13.5, y=-5, anchor=north east]{VariableDeclaration}{
 				-string name \\
 				-string type \\
 				-vector<string> occurences
@@ -243,10 +242,12 @@ A diagram of the involved classes can be seen in \fref{fig:Visitor}.
 				+bool operator==($\ldots$) \\
 				+void addOccurence($\ldots$)
 			}
-			\umlcompo[mult1=1, mult2=*]{Visitor}{VariableDeclaration}
-			\umlcompo[mult1=1, mult2=*]{VariableDeclaration}{SourceLocation}
+			\umlcompo[mult1=1, mult2=*, anchor2=-170]
+					{Visitor}{VariableDeclaration}
+			\umlcompo[mult1=1, mult2=*, geometry=|-|, arm2=0]
+					{VariableDeclaration}{SourceLocation}
 		\end{umlpackage}
-		\umlinherit{Visitor}{RecursiveASTVisitor}
+		\umlinherit[geometry=|-|, arm1=0]{Visitor}{RecursiveASTVisitor}
 	\end{tikzpicture}
 \end{figure}
 
