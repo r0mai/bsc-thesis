@@ -94,6 +94,10 @@ schema = configure_file(input: 'schema/varnames.json',
 example_cpp = configure_file(input: examples / 'example.cpp',
         output: 'example.cpp',
         copy: true)
+databasekeywords = configure_file(
+        input: 'test/robot/suggest-names/resources/DatabaseKeywords.robot',
+        output: 'DatabaseKeywords.robot',
+        copy: true)
 
 suggest_names_help = custom_target('suggest_names --help',
         command: [
@@ -193,6 +197,7 @@ thesis = custom_target('Thesis pdf',
         depend_files: [
             vim_doc,
             schema,
+            databasekeywords,
             files([
                 'img/elte_logo.eps',
                 'tex/titlepage.tex',
