@@ -134,6 +134,7 @@ invoked after the compilation has been done.
 				+\umlvirt{bool ParseArgs($\ldots$)} \\
 				+\umlvirt{ActionType getActionType()}
 			}
+			\umlsimpleclass[x=6.5, y=0]{ASTConsumer}
 		\end{umlpackage}
 		\begin{umlpackage}{dn}
 			\umlclass[x=0, y=-5]{Action}{
@@ -145,6 +146,7 @@ invoked after the compilation has been done.
 			}
 			\umlinherit{Action}{PluginASTAction}
 			\umlsimpleclass[x=7.5, y=-5]{Consumer}
+			\umlinherit[geometry=|-|]{Consumer}{ASTConsumer}
 			\stereorelation{\umluniassoc}{creates}{mult1=1, mult2=1}
 					{Action}{Consumer};
 		\end{umlpackage}
