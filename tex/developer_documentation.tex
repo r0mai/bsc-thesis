@@ -337,8 +337,8 @@ construct the set of non-stale databases as follows:
 \begin{equation}
 	database_1, \ldots, database_n = \left \{
 		\substack {
-			db \mid dn \in input\_database \\
-			\land exists(input\_database.filename)
+			input\_database_i \mid i \in \left \{ 1, \ldots, m \right \} \\
+			\land exists(input\_database_i.filename)
 		}
 	\right \}
 \end{equation}
