@@ -2,8 +2,13 @@
 \label{chapter:Testing}
 
 This chapter describes the testing involved in this project.
-
 This project is tested using Robot Framework \cite{robotframework}.
+
+As the project is composed of multiple programs, each part is tested
+independently. This helps in comprehension of each test, as the reader can only
+deal with one part at a time, and also eliminates a combinatorial explosion that
+would emerge if every type of input that could emerge for the Clang-plugin then
+needed to be tested by way of testing the variable-name suggestions.
 
 \lstdefinelanguage{Robot} {
 	morekeywords={
