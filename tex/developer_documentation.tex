@@ -308,10 +308,10 @@ source-code. This means we may occur a reference to a field before we have
 managed to record the field itself.
 
 The other --more subtle-- case where we may see a reference before a declaration
-is in the case of template functions whose return type and signature are only
-determined fully upon instantiation. These function templates needn't be
-instantiated to be visited, however when they are, there arguments are
-referenced before they are declared.
+is in the case of template functions whose signatures are only determined fully
+upon instantiation. These function templates needn't be instantiated to be
+visited, however when they are, there arguments are referenced before they are
+declared.
 
 In both of the above cases, we need to make sure that the variable to which we
 are trying to add an occurence already exists in the database. The naive
