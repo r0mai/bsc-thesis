@@ -97,8 +97,47 @@ clang++ \
 	-o /path/to/output.o
 \end{lstlisting}
 
-Results in \lstinline|/path/to/output/o.names.json|.
+Results in \lstinline|/path/to/output/o.names.json|. This is most useful when
+using the Clang-plugin as part of a build-system, as described next.
 
+\subsubsection{Build-System Integration}
+To generate the variable databases for a project larger than a few files,
+integration into the project's build-system is needed. As variable databases are
+generated per translation-unit, this means we have to change to way \CC{} files
+are compiled, namely that Clang is used as the compiler, and that our plugin is
+used during compilation.
+
+Several build-systems provide the option of the user to specify the compiler to
+be used, as well as additional compiler arguments. For CMake \cite{cmake}, these
+can be achieved as follows:
+
+Set the compiler to Clang with:
+\begin{lstlisting}[caption={CMake Compiler Setting}]
+CMAKE_CXX_COMPILER=clang++
+\end{lstlisting}
+
+Set the compiler flags to use the plugin with:
+\begin{lstlisting}[caption={CMake Compiler Arguments}]
+CMAKE_CXX_FLAGS='-fplugin=/path/to/libdump_names.so'
+\end{lstlisting}
+
+For instance, when bootstrapping a project, instead of
+\begin{lstlisting}[caption={CMake Invokation without the Plugin}]
+mkdir build
+cd build
+cmake -G "Ninja" ..
+\end{lstlisting}
+do
+\begin{lstlisting}[caption={CMake Invokation with the Plugin}]
+mkdir build
+cd build
+cmake -G "Ninja" \
+	-DCMAKE_CXX_COMPILER=clang++ \
+	-DCMAKE_CXX_FLAGS='-fplugin=/path/to/libdump_names.so' \
+	..
+\end{lstlisting}
+
+\subsubsection{An Example Run}
 In the following sections we will refer to the following example piece of \CC{}
 code:
 
