@@ -107,8 +107,8 @@ The plugin first starts by loading \lstinline|Action| into
 		\end{umlpackage}
 		\stereorelation{\umluniassoc}{register}{mult1=1, mult2=1, name=register}
 				{ASTAction}{FrontendPluginRegistry};
-		\umlnote[x=8, y=-2.5, width=8cm]{register-1}
-				{\lstinline|FrontendPluginRegistry::Add<dn::Action> \_\{\}|}
+		\umlnote[x=13.5, y=-2.5, anchor=east, width=9.5cm]{register-1}
+				{\lstinline|clang::FrontendPluginRegistry::Add<dn::Action> \_\{\};|}
 	\end{tikzpicture}
 \end{figure}
 
