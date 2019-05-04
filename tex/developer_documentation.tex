@@ -175,10 +175,10 @@ file.
 		\end{umlpackage}
 		\begin{umlpackage}{dn}
 			\umlclass[x=0, y=-4.5]{Consumer}{
-				clang::CompilerInstance\& ci\\
-				string inputFile \\
-				string outputFile \\
-				map<string, string> debugPrefixMap
+				-clang::CompilerInstance\& ci\\
+				-string inputFile \\
+				-string outputFile \\
+				-map<string, string> debugPrefixMap
 			}{
 				-\umlvirt{void HandleTranslationUnit()}
 			}
