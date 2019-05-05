@@ -261,3 +261,13 @@ of the start of the variable before requesting suggestions.
 Also note, that column numbers are based on the number of characters that
 precede them, not their apparent position when displayed on a screen. This is
 mostly important in code-bases where tabs are used for indentation.
+
+\subsection{Code Compilation Fails After a Rename}
+If after a rename, the code no longer compiles, there are generally two possible
+reasons \begin{inparaenum}[\itshape 1)\upshape]\item The variable-name chosen
+was already in use and \item The rename was performed with out-of-date
+databases\end{inparaenum}.
+There is no general solution for the former, as this would require
+\lstinline|suggest_names| to only suggest names that are not in use in the
+surrounding scope, but the latter can be solved by always performing renames
+right after build, where the databases are up to date.
