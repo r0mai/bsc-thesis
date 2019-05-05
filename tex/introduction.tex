@@ -13,6 +13,13 @@ of all variable declarations and their relations, so that accurate suggestions
 can be made. This is achieved by providing a compiler-plugin for Clang, the
 \CC{}-compiler of the LLVM compiler infrastructure \cite{llvm}.
 
+The compiler-plugin generates a database containing information on variables,
+which are then used by a set of scripts to suggest variable names, and to
+perform renaming operations.
+
+A Vim-plugin is also provided to allow users Vim-users to integrate the tools
+provided into their daily workflow.
+
 \section{Thesis Structure}
 This thesis is composed of multiple chapters, each dealing with a certain part
 of the work involved.
