@@ -47,7 +47,7 @@ Databases are merged
 The merged database has ${n} variables
     Length Should Be    ${merged_database.variables}  ${n}
 
-Then Each ${n} variables have ${k} occurences
+Each ${n} variables have ${k} occurences
     Length Should Be    ${merged_database.variables}  ${n}
     :FOR    ${ELEMENT}  IN  @{merged_database.variables}
     \   Length Should Be  ${ELEMENT.occurences}  ${k}
