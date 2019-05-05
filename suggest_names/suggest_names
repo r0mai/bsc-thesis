@@ -7,7 +7,7 @@ import merge
 import suggest
 import os
 
-def _find_corresponding_varaible(variables, filename, line, column):
+def _find_corresponding_variable(variables, filename, line, column):
     for variable in variables:
         location_components = variable.location.split(':')
         location_components[1] = int(location_components[1])
@@ -24,7 +24,7 @@ def print_suggestions(databasefiles, filename, line, column):
         for databasefile in databasefiles]
     merged_database = merge.merge_databases(databases)
 
-    variable = _find_corresponding_varaible(merged_database.variables,
+    variable = _find_corresponding_variable(merged_database.variables,
             filename, line, column)
     print('\n'.join(suggest.suggest_for(merged_database, variable)))
 
