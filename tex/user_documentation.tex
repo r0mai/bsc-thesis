@@ -166,7 +166,8 @@ cmake -G "Ninja" \
 In the following sections we will refer to the following example piece of \CC{}
 code:
 
-\lstinputlisting[language=c++, numbers=left, caption={\lstinline|example.cpp|}]
+\lstinputlisting[label={lst:examplecpp}, language=c++, numbers=left,
+		caption={\lstinline|example.cpp|}]
 		{example.cpp}
 
 Running the Clang-plugin as described above will give us a JSON file containing
@@ -237,3 +238,26 @@ let g:suggest_names_database_path = '/path/to/project/builddir'
 
 The output of querying the help for \lstinline|:help suggest-names.txt| can be
 found in appendix \ref{appendix:vimplugindoc}.
+
+\section{Troubleshooting}
+This section describes potential error messages the user may see during use of
+the tools described prior, and how to resolve them.
+
+\subsection{Variable not in merged database}
+If the user requests variable-names for a variable not present in the database,
+\lstinline|suggest_names| gives an error along the lines of:
+
+\lstinputlisting[breaklines=true, caption=
+		{Trackback when requesting names for a variable not present}]
+		{example_failure}
+In this case, the error was caused by querying a variable at line 2, column 10
+of \lstinline|example.cpp| (see \fref{lst:examplecpp}). To fix this, we need to
+pass column \emph{9} instead of 10 to get the proper result.
+
+When using the Vim plugin, this does not occur even if the cursor is not on the
+first character of the variable, as the Vim plugin first computes the position
+of the start of the variable before requesting suggestions.
+
+Also note, that column numbers are based on the number of characters that
+precede them, not their apparent position when displayed on a screen. This is
+mostly important in code-bases where tabs are used for indentation.

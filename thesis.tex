@@ -56,6 +56,24 @@
 	morestring=[b]",
 }
 
+
+\newcommand*{\fancyreflstlabelprefix}{lst}
+
+\fancyrefaddcaptions{english}{%
+	\providecommand*{\freflstname}{listing}%
+	\providecommand*{\Freflstname}{Listing}%
+}
+
+\frefformat{plain}{\fancyreflstlabelprefix}{\freflstname\fancyrefdefaultspacing#1}
+\Frefformat{plain}{\fancyreflstlabelprefix}{\Freflstname\fancyrefdefaultspacing#1}
+
+\frefformat{vario}{\fancyreflstlabelprefix}{%
+	\freflstname\fancyrefdefaultspacing#1#3%
+}
+\Frefformat{vario}{\fancyreflstlabelprefix}{%
+	\Freflstname\fancyrefdefaultspacing#1#3%
+}
+
 \makeatletter
 \AtBeginDocument{%
 	\expandafter\renewcommand\expandafter\subsection\expandafter{%

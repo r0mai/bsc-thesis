@@ -98,6 +98,7 @@ databasekeywords = configure_file(
         input: 'test/robot/suggest-names/resources/DatabaseKeywords.robot',
         output: 'DatabaseKeywords.robot',
         copy: true)
+gettraceback = meson.source_root() / 'gettraceback.sh'
 
 suggest_names_help = custom_target('suggest_names --help',
         command: [
@@ -173,6 +174,25 @@ example_suggestions = custom_target('Example variable name suggestions',
         capture: true,
         output: 'example_suggestions',)
 
+example_failure = custom_target('Example variable name suggestion failure',
+        command: [
+                gettraceback,
+                suggest_names / 'suggest_names',
+                example_varnames_json,
+                'example.cpp',
+                '2',
+                '10'
+        ],
+        depend_files: [
+                gettraceback,
+                suggest_names / 'suggest_names',
+                suggest_names / 'database.py',
+                suggest_names / 'merge.py',
+                suggest_names / 'suggest.py',
+        ],
+        capture: true,
+        output: 'example_failure')
+
 thesis = custom_target('Thesis pdf',
         command: [
                 find_program('rubber'),
@@ -193,7 +213,8 @@ thesis = custom_target('Thesis pdf',
             suggest_names_help,
             suggest_names_rename_help,
             example_varnames_json,
-            example_suggestions],
+            example_suggestions,
+            example_failure],
         depend_files: [
             vim_doc,
             schema,
