@@ -144,7 +144,7 @@ invoked after the compilation has been done.
 		\end{umlpackage}
 		\begin{umlpackage}{dn}
 			\umlclass[x=0, y=-5, anchor=west]{Action}{
-				\umlprivate{}boost::optional<string> outputFilename
+				\umlprivate{}outputFilename: boost::optional<string>
 			}{
 				\umlpublic{}\umlvirt{ASTConsumer* CreateASTConsumer($\ldots$)} \\
 				\umlpublic{}\umlvirt{bool ParseArgs($\ldots$)} \\
@@ -183,14 +183,14 @@ file.
 		\end{umlpackage}
 		\begin{umlpackage}{dn}
 			\umlclass[x=0, y=-6, anchor=west]{Consumer}{
-				\umlprivate{}clang::CompilerInstance\& ci\\
-				\umlprivate{}string inputFile \\
-				\umlprivate{}string outputFile \\
-				\umlprivate{}map<string, string> debugPrefixMap
+				\umlprivate{}ci: clang::CompilerInstance\& \\
+				\umlprivate{}inputFile: string \\
+				\umlprivate{}outputFile: string \\
+				\umlprivate{}debugPrefixMap: map<string, string>
 			}{
 				\umlprivate{}\umlvirt{void HandleTranslationUnit()}
 			}
-			\umlsimpleclass[x=11, y=-6, anchor=east]{Visitor}
+			\umlsimpleclass[x=12, y=-6, anchor=east]{Visitor}
 			\stereorelation{\umluniassoc}{calls}{mult1=1, mult2=1}
 					{Consumer}{Visitor}
 		\end{umlpackage}
@@ -227,8 +227,8 @@ A diagram of the involved classes can be seen in \fref{fig:Visitor}.
 		\end{umlpackage}
 		\begin{umlpackage}{dn}
 			\umlclass[x=0, y=-5, anchor=north west]{Visitor}{
-				-string outputFile \\
-				-map<string, string> debugPrefixMap \\
+				-outputFile: string \\
+				-debugPrefixMap: map<string, string> \\
 			}{
 				\umlpublic{}\umlvirt{bool VisitDecl($\ldots$)} \\
 				\umlpublic{}\umlvirt{bool VisitDecl($\ldots$)} \\
@@ -240,9 +240,9 @@ A diagram of the involved classes can be seen in \fref{fig:Visitor}.
 				\umlprivate{}void addOccurence($\ldots$)
 			}
 			\umlclass[x=13.5, y=-5, anchor=north east]{VariableDeclaration}{
-				\umlprivate{}string name \\
-				\umlprivate{}string type \\
-				\umlprivate{}vector<string> occurences
+				\umlprivate{}name: string \\
+				\umlprivate{}type: string \\
+				\umlprivate{}occurences: vector<string>
 			}{
 				\umlpublic{}string getName() \\
 				\umlpublic{}string getType() \\
