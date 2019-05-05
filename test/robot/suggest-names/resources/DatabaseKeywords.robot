@@ -2,13 +2,13 @@
 Library         Collections
 
 *** Keywords ***
-Empty Database
-    ${database} =       Make Database
+Empty database
+    ${database} =       Make database
     Append To List      ${databases}    ${database}
 
-Single Variable
+Single variable
     [Arguments]         @{occurences}
-    ${variable} =       Make Variable   int     a
+    ${variable} =       Make variable   int     a
     ...                         test.cpp:1:1    ${occurences}
     Set Test Variable   ${variable}
     [Return]            ${variable}
@@ -18,7 +18,7 @@ Database with one variable
     ${database} =       Make Database   ${variable}
     Append To List      ${databases}    ${database}
 
-Stale Database
+Stale database
     ${variable} =       Make Variable   int     stale
     ...                         /non_existent:1:1
     ${database} =       Make Database   ${variable}
@@ -26,22 +26,22 @@ Stale Database
     Append To List      ${databases}  ${database}
 
 Database with one variable and one occurence
-    ${variable} =       Single Variable     test.cpp:2:1
-    ${database} =       Make Database  ${variable}
+    ${variable} =       Single variable     test.cpp:2:1
+    ${database} =       Make database  ${variable}
     Append To List      ${databases}  ${database}
 
 Database with one variable and an other occurence
-    ${variable} =       Single Variable     test2.cpp:2:1
-    ${database} =       Make Database  ${variable}
+    ${variable} =       Single variable     test2.cpp:2:1
+    ${database} =       Make database  ${variable}
     Append To List      ${databases}  ${database}
 
 Database with an other variable
-    ${variable} =       Make Variable  int  b   test.cpp:2:1
-    ${database} =       Make Database  ${variable}
+    ${variable} =       Make variable  int  b   test.cpp:2:1
+    ${database} =       Make database  ${variable}
     Append To List      ${databases}  ${database}
 
 Databases are merged
-    ${merged_database} =  Merge Databases   ${databases}
+    ${merged_database} =    Merge databases   ${databases}
     Set Test Variable   ${merged_database}
 
 The merged database has ${n} variables
