@@ -85,6 +85,17 @@ apt_packages = custom_target('Apt Package List',
         input: '.travis.yml',
         output: 'apt_packages.txt')
 
+llvm_ppa = custom_target('LLVM PPA',
+        command: [
+                find_program('yq'),
+                '--raw-output',
+                '.addons.apt.sources[0].sourceline',
+                '@INPUT@'
+        ],
+        capture: true,
+        input: '.travis.yml',
+        output: 'llvm_ppa.txt')
+
 vim_doc = configure_file(input: 'vim/doc/suggest-names.txt',
         output: 'vim-doc.txt',
         copy: true)
@@ -210,6 +221,7 @@ thesis = custom_target('Thesis pdf',
             tex_vcs_tag,
             tex_test_list,
             apt_packages,
+            llvm_ppa,
             suggest_names_help,
             suggest_names_rename_help,
             example_varnames_json,

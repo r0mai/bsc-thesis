@@ -55,6 +55,16 @@ These can be installed with:
 		breaklines=true]
 apt-get install>\requirementsinstall{apt_packages.txt}>
 \end{lstlisting}
+If the LLVM-7 packages are not available for your distribution, they can be
+added with:
+\begin{lstlisting}[caption={Adding the LLVM apt repository}, escapechar=>]
+apt-add-repository \
+	>\requirementsinstall{llvm_ppa.txt}>
+\end{lstlisting}
+
+To help users on older distributions where the LLVM-7 packages may require
+packages which are not available, this project is also compatibl with Clang and
+LLVM version 4.
 
 \subsubsection{\LaTeX{} packages required}
 \begin{itemize}
