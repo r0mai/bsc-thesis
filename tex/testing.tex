@@ -15,10 +15,10 @@ Keywords used by these tests can be found in appendix
 
 \lstdefinelanguage{Robot} {
 	morekeywords={
-		given,
-		when,
-		then,
-		and,
+		Given,
+		When,
+		Then,
+		And,
 		[setup],
 		[teardown],
 		[template]
@@ -44,6 +44,8 @@ Keywords used by these tests can be found in appendix
 	sensitive=true,
 	string=[s]{$\{}{\}},
 	morestring=[s]{@\{}{\}},
+	morestring=[s]{\[}{\]},
+	morestring=[b]",
 	morecomment=[s]{***}{***}
 }
 
@@ -51,9 +53,14 @@ Keywords used by these tests can be found in appendix
 	language=Robot,
 	keywordstyle=\color{orange},
 	keywordstyle=[2]\color{red},
-	keywordstyle=[3]\color{gray},
+	keywordstyle=[3],
 	stringstyle=\color{teal},
 	commentstyle=\color{blue}
+}
+
+\lstdefinestyle{Robot Resource} {
+	style=Pretty Robot,
+	keywordstyle=[3]\color{gray}
 }
 
 \input{test_list.tex}

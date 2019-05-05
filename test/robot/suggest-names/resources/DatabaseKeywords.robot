@@ -14,48 +14,48 @@ Single variable
     [Return]            ${variable}
 
 Database with one variable
-    ${variable} =       Single Variable
-    ${database} =       Make Database   ${variable}
+    ${variable} =       Single variable
+    ${database} =       Make database   ${variable}
     Append To List      ${databases}    ${database}
 
 Stale database
-    ${variable} =       Make Variable   int     stale
+    ${variable} =       Make variable   int     stale
     ...                         /non_existent:1:1
-    ${database} =       Make Database   ${variable}
+    ${database} =       Make database   ${variable}
     ...                         filename="/non_existent"
-    Append To List      ${databases}  ${database}
+    Append To List      ${databases}    ${database}
 
 Database with one variable and one occurence
     ${variable} =       Single variable     test.cpp:2:1
-    ${database} =       Make database  ${variable}
-    Append To List      ${databases}  ${database}
+    ${database} =       Make database   ${variable}
+    Append To List      ${databases}    ${database}
 
 Database with one variable and an other occurence
     ${variable} =       Single variable     test2.cpp:2:1
-    ${database} =       Make database  ${variable}
-    Append To List      ${databases}  ${database}
+    ${database} =       Make database   ${variable}
+    Append To List      ${databases}    ${database}
 
 Database with an other variable
     ${variable} =       Make variable  int  b   test.cpp:2:1
-    ${database} =       Make database  ${variable}
-    Append To List      ${databases}  ${database}
+    ${database} =       Make database   ${variable}
+    Append To List      ${databases}    ${database}
 
 Databases are merged
     ${merged_database} =    Merge databases   ${databases}
     Set Test Variable   ${merged_database}
 
 The merged database has ${n} variables
-    Length Should Be    ${merged_database.variables}  ${n}
+    Length Should Be    ${merged_database.variables}    ${n}
 
 Each ${n} variables have ${k} occurences
-    Length Should Be    ${merged_database.variables}  ${n}
+    Length Should Be    ${merged_database.variables}    ${n}
     :FOR    ${ELEMENT}  IN  @{merged_database.variables}
-    \   Length Should Be  ${ELEMENT.occurences}  ${k}
+    \   Length Should Be    ${ELEMENT.occurences}       ${k}
 
-Clear Databases
+Clear databases
     @{databases} =      Create List
     Set Test Variable   ${databases}
 
-Clear Variable
+Clear variable
     ${variable} =       Evaluate    None
     Set Test Variable   ${variable}
