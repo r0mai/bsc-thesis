@@ -4,7 +4,76 @@
 \section{Results}
 Several programs were implemented, that comprise a tool for suggesting
 variable-names for \CC{} codebases. This tool was tested automatically using
-Robot \cite{robotframework}, and tested manually against xerces-c
+Robot \cite{robotframework}, and tested manually against Xerces-\CC{}
 \cite{xerces-c}. Variable-name suggestions were based on the type of the
 variable in question, and suggestions and renaming was made available via a Vim
 plugin.
+
+\section{Further Work}
+Multiple improvements can be made to the way variable-name suggestions work,
+these are listed here.
+
+\subsection{Variable-kind Aware Suggestions}
+Several projects decorate variable names according to their kind, such as
+\lstinline|m_| being used as a prefix for member variables. In Xerces-\CC{}, the
+prefix  \lstinline|f| is used.
+
+This should be incorporated into to the suggestion process, so that when
+\lstinline|suggest_names| finds a candidate variable of kind $A$, for variable
+of kind $B$, the prefix (or other decoration) for $A$ is removed, and the prefix
+for $B$ is applied, thereby ensuring that variable-names suggested follow these
+conventions.
+
+\subsection{Only Suggest Names that can be Used}
+\Fref{sec:troubleshooting} describes some error-cases, one of which being that
+\lstinline|suggest_names| can suggest variable names after which the code fails
+to compile. A solution to this would be to track a list of conflicting variable
+names for each variable in the database. A variable $A$ would conflict with a
+variable $B$, that is $B$ could not be renamed to $A$, if $A$ was declared in
+the same scope as $B$ (as opposed to an ancestor scope), or if $A$ was declared
+in an ancestor scope, but was referred to in the scope of $B$. This analysis
+would need to be performed by the Clang-plugin, as determining conflicts like
+this is \CC{} specific.
+
+\subsection{Follow Function-calls}
+Currently, suggestions are made purely based on the type of the variable. For
+certain types, the type does not strongly determine the name of the variable.
+For instance, a variable of type \lstinline|int| could legitmately be called
+\lstinline|i|, \lstinline|fd|, \lstinline|error|, or
+\lstinline|temperatureOfBudapestInCelsius|. While many types can reasonably
+determine the names, types like \lstinline|int| do not. In this case, we can
+follow the functions into which a variable is passed, and see what name was
+assigned to the parameter in the definition of the function, as well as the name
+of the returned value (if any). The current architecture of having several
+databases and then merging them would work well for this, as the function
+definition wouldn't need to be in the translation-unit where the rename takes
+place.
+
+\subsection{Ignore Certain Paths}
+Many code-bases have dependencies on large third-party code-bases, such as the
+\CC{} standard library, or Boost. Frequently however, code-bases use different
+coding conventions to that of the third-party library, so those could be omitted
+both for improving the results of variable-name suggestions. If they were
+omitted during the database-generation phase, merging would even be faster as
+there would be less variables to parse. For instance, a simple
+\lstinline|#include<iostream>| typically generates upwards of 4500 variable
+declarations, many of which are internal to the library and are of no use in
+renaming.
+
+\subsubsection{Map conventions}
+A more sophisticated version of the above, is to distinguish parts of the
+code-base that are written with different conventions. For instance, if a
+code-base calls file descriptors \lstinline|fileDescriptor|, whereas the GNU C
+Library \cite{glibc} calls them \lstinline|__fd|, instead of ignoring calls into
+glibc, we could determine the convention as it applies in glibc, and map it back
+to the calling project's conventions.
+
+\subsection{Speed}
+Currently, there is a non-trivial performance cost of running variable-name
+analysis during the compilation. For instance, on an Intel Core i5-4590 CPU,
+Xerces-\CC{} without our plugin builds in ~17s, where as takes upwards of 5
+minutes with the plugin enabled. The primary cause of this is needing to track
+whether we have seen the variables declaration before adding an occurence. This
+is currently done with an array of Variables, storing an array of Occurences,
+which leads to cubic time-complexity. Using a hashmap or similar data structure
+would cut down the performance penalty drastically.
