@@ -37,6 +37,10 @@ thesis.
 
 \section{Building and Installation}
 \subsection{Prerequisites}
+
+This project was developed on Debian Stretch \cite{debian}, and tested on
+Ubuntu Xenial \cite{ubuntu}.
+
 \subsubsection{Python packages required}
 To build, install and test the components of this project, the following
 dependencies are required:
@@ -186,7 +190,7 @@ information on the symbols in the program:
 \lstinputlisting[language=json, numbers=left,
 		caption={\lstinline|examples.cpp.o.names.json|}]{example.varnames.json}
 
-By default, all filenames in the output are full paths. To make the output more
+By default, all paths in the output are absolute paths. To make the output more
 easily legible, we pass the \lstinline|-fdebug-prefix-map=/path/to/repository=.|
 command-line argument to Clang, so that the output files are relative the root
 of the repository.
@@ -211,7 +215,10 @@ The resulting suggestions are as follows:
 		{example_suggestions}
 
 \subsection{Performing a Rename}
-Renames can be performed with \lstinline|suggest_names_rename|.
+Renames can be performed with \lstinline|suggest_names_rename|. When a rename is
+made, all references to the variable are adjusted to the new name, even accross
+translation-unit boundaries.
+
 The documentation for \lstinline|suggest_names_rename| is as follows:
 \lstinputlisting[caption={\lstinline|suggest_names_rename --help|}]
 		{suggest_names_rename_help.txt}
@@ -247,7 +254,7 @@ let g:suggest_names_database_path = '/path/to/project/builddir'
 \end{lstlisting}
 
 The output of querying the help for \lstinline|:help suggest-names.txt| can be
-found in appendix \ref{appendix:vimplugindoc}.
+found in \fref{appendix:vimplugindoc}.
 
 \section{Troubleshooting}
 \label{sec:troubleshooting}
@@ -278,7 +285,9 @@ If after a rename, the code no longer compiles, there are generally two possible
 reasons \begin{inparaenum}[\itshape 1)\upshape]\item The variable-name chosen
 was already in use and \item The rename was performed with out-of-date
 databases\end{inparaenum}.
-There is no general solution for the former, as this would require
+There is no fix for the user to apply in the former case, only to undo the
+change and pick a different name. The general solution would be for
 \lstinline|suggest_names| to only suggest names that are not in use in the
-surrounding scope, but the latter can be solved by always performing renames
-right after build, where the databases are up to date.
+surrounding scope as described in \fref{subsec:onlysuggestworkingnames}.
+The latter can be solved by always performing renames right after build, where
+the databases are up to date.

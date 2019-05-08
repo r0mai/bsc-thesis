@@ -75,6 +75,40 @@
 	\Freflstname\fancyrefdefaultspacing#1#3%
 }
 
+\newcommand*{\fancyrefsubseclabelprefix}{subsec}
+
+\fancyrefaddcaptions{english}{%
+	\providecommand*{\frefsubsecname}{subsection}%
+	\providecommand*{\Frefsubsecname}{Subsection}%
+}
+
+\frefformat{plain}{\fancyrefsubseclabelprefix}{\frefsubsecname\fancyrefdefaultspacing#1}
+\Frefformat{plain}{\fancyrefsubseclabelprefix}{\Frefsubsecname\fancyrefdefaultspacing#1}
+
+\frefformat{vario}{\fancyrefsubseclabelprefix}{%
+	\frefsubsecname\fancyrefdefaultspacing#1#3%
+}
+\Frefformat{vario}{\fancyrefsubseclabelprefix}{%
+	\Frefsubsecname\fancyrefdefaultspacing#1#3%
+}
+
+\newcommand*{\fancyrefappendixlabelprefix}{appendix}
+
+\fancyrefaddcaptions{english}{%
+	\providecommand*{\frefappendixname}{appendix}%
+	\providecommand*{\Frefappendixname}{Appendix}%
+}
+
+\frefformat{plain}{\fancyrefappendixlabelprefix}{\frefappendixname\fancyrefdefaultspacing#1}
+\Frefformat{plain}{\fancyrefappendixlabelprefix}{\Frefappendixname\fancyrefdefaultspacing#1}
+
+\frefformat{vario}{\fancyrefappendixlabelprefix}{%
+	\frefappendixname\fancyrefdefaultspacing#1#3%
+}
+\Frefformat{vario}{\fancyrefappendixlabelprefix}{%
+	\Frefappendixname\fancyrefdefaultspacing#1#3%
+}
+
 \makeatletter
 \AtBeginDocument{%
 	\expandafter\renewcommand\expandafter\subsection\expandafter{%

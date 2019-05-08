@@ -4,12 +4,12 @@
 \section{Architectural Overview}
 \label{sec:Arch}
 
-Figure~\ref{fig:Arch} provides an overview of the system. The clang-plugin
-developed produces a database for each translation-unit, which can then be
-merged to make all variable declarations available to the frontend, which can
-then suggest names for the variables.
+\Fref{fig:Arch} provides an overview of the system. The clang-plugin developed
+produces a database for each translation-unit, which can then be merged to make
+all variable declarations available to the frontend, which can then suggest
+names for the variables.
 
-The structure of the database can be seen in Figure~\ref{fig:Database}.
+The structure of the database can be seen in \fref{fig:Database}.
 
 %Hack to get the stereo to be aligned next to the line instead of on it.
 \newcommand{\stereorelation}[5]{
@@ -26,8 +26,8 @@ The structure of the database can be seen in Figure~\ref{fig:Database}.
 }
 
 \begin{figure}[h]
-	\label{fig:Arch}
 	\caption{Overview of Architectural Elements}
+	\label{fig:Arch}
 	\centering
 	\begin{tikzpicture}
 		\umlsimpleclass[x=0, y=0]{header}{}{}
@@ -51,8 +51,8 @@ The structure of the database can be seen in Figure~\ref{fig:Database}.
 \end{figure}
 
 \begin{figure}[h]
-	\label{fig:Database}
 	\caption{Structure of the Database}
+	\label{fig:Database}
 	\centering
 	\begin{tikzpicture}
 		\umlclass[x=0, y=0, anchor=north west]{Database}{filename: string}{}
@@ -75,12 +75,13 @@ The structure of the database can be seen in Figure~\ref{fig:Database}.
 The database produced by the compiler-plugin generates a list of declarations
 that are later used for suggesting variables.
 The database format is designed such that each translation unit creates its own
-database, so that when a project is being built with a build-system that
-supports incremental building, wherein a source change only causes the impacted
-source file to be recompiled, the database produced for that source file can
-then be recombined with the rest, to produced a complete overview of all
-variables in the project. For a formal schema of the database, see
-appendix \ref{appendix:schema}.
+database. This is so that when a project is being built with a build-system that
+supports incremental building --wherein a change in a source or header file only
+causes the the subset of source files to be recompiled which are actually
+impacted-- the databases produced for those source files can then be recombined
+with the rest to produce a complete overview of all variables in the project.
+This is what makes cross translation-unit suggestions and renaming operations
+possible. For a formal schema of the database, see \fref{appendix:schema}.
 
 To support renaming of variables, we also need to track the location of any
 references to the variables. This is to ensure that after renaming the
@@ -221,7 +222,7 @@ A diagram of the involved classes can be seen in \fref{fig:Visitor}.
 				{RecursiveASTVisitor}{}{
 					\umlpublic{}bool TraverseDecl($\ldots$) \\
 					\umlpublic{}\umlvirt{bool VisitDecl($\ldots$)} \\
-					\umlpublic{}\umlvirt{bool VisitDecl($\ldots$)}
+					\umlpublic{}\umlvirt{bool VisitStmt($\ldots$)}
 			}
 			\umlsimpleclass[x=13.5, y=0, anchor=north east]{SourceLocation}
 		\end{umlpackage}
@@ -231,7 +232,7 @@ A diagram of the involved classes can be seen in \fref{fig:Visitor}.
 				-debugPrefixMap: map<string, string> \\
 			}{
 				\umlpublic{}\umlvirt{bool VisitDecl($\ldots$)} \\
-				\umlpublic{}\umlvirt{bool VisitDecl($\ldots$)} \\
+				\umlpublic{}\umlvirt{bool VisitStmt($\ldots$)} \\
 				\umlpublic{}void printVariableNames($\ldots$) \\
 				\umlprivate{}void visitVariableDeclaration($\ldots$) \\
 				\umlprivate{}void visitFieldDeclaration($\ldots$) \\
@@ -396,8 +397,8 @@ based on the type of the variable we wish to rename.
 
 \subsubsection{Making Suggestions Based on Type}
 
-From the complete database $database$, we first get all the candidate names by
-looking up all variables that have the same type as the variable we are
+From the complete database named $database$, we first get all the candidate
+names by looking up all variables that have the same type as the variable we are
 suggesting names for. Let's call the variable we are suggesting a new name for
 $variable$. The set of names then becomes:
 

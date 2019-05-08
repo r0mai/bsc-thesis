@@ -3,7 +3,7 @@
 ===========================================================
 INTRODUCTION                 *vim-suggest-names-introduction*
 
-This plugin wraps `suggest-names` so that you can
+This plugin wraps `suggest_names` so that you can
 automatically have variable suggestions for C++ code.
 
 ===========================================================
