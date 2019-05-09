@@ -104,7 +104,7 @@ $ export PATH=/path/to/repository/suggest_names:$PATH
 \subsection{Generating the Variable Database}
 Before any variable suggestions can be made, the source-code must be indexed.
 This is achieved with a clang-plugin, which during compilation collects all
-variable occurences, and information about them such as their type and name.
+variable occurences, and information about them, such as their type and name.
 
 \subsubsection{Clang Invocation}
 To generate a database for a given source file, run clang as follows:
@@ -267,7 +267,7 @@ If the user requests variable-names for a variable not present in any of the
 databases, \lstinline|suggest_names| gives an error along the lines of:
 
 \lstinputlisting[breaklines=true, caption=
-		{Trackback when requesting names for a variable not present}]
+		{Traceback when requesting names for a variable not present}]
 		{example_failure}
 In this case, the error was caused by querying a variable at line 2, column 10
 of \lstinline|example.cpp| (see \fref{lst:examplecpp}). To fix this, we need to
