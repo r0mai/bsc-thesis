@@ -76,12 +76,12 @@ The database produced by the compiler-plugin generates a list of declarations
 that are later used for suggesting variables.
 The database format is designed such that each translation unit creates its own
 database. This is so that when a project is being built with a build-system that
-supports incremental building --wherein a change in a source or header file only
-causes the the subset of source files to be recompiled which are actually
-impacted-- the databases produced for those source files can then be recombined
-with the rest to produce a complete overview of all variables in the project.
-This is what makes cross translation-unit suggestions and renaming operations
-possible. For a formal schema of the database, see \fref{appendix:schema}.
+supports incremental building --where each output binary is kept up-to-date by
+only recompiling the changed sources files-- the databases produced for those
+source files can then be recombined with the rest to produce a complete overview
+of all variables in the project.  This is what makes cross translation-unit
+suggestions and renaming operations possible. For a formal schema of the
+database, see \fref{appendix:schema}.
 
 To support renaming of variables, we also need to track the location of any
 references to the variables. This is to ensure that after renaming the
@@ -96,7 +96,11 @@ we also need to merge the list of occurences.
 The clang-plugin contains all the code needed for traversing the Abstract
 Syntax Tree, along with the routines needed for dumping the names that occur in
 the codebase to a JSON file. All code in the clang-plugin is defined in
-\lstinline|namespace dn|.
+\lstinline|namespace dn|. The components listed here each derive from or
+interact with the interfaces of Clang designed for use in plugins.
+
+Most of the work done by the plugin will be in visiting the Abstract Syntax Tree
+produced by Clang, which will be described in \fref{subsec:visitation}.
 
 \subsection{Plugin}
 The plugin first starts by loading \lstinline|Action| into
@@ -201,6 +205,7 @@ file.
 
 \section{Implementation}
 \subsection{Visiting the Abstract Syntax Tree}
+\label{subsec:visitation}
 
 There are two main tasks to accomplish when traversing the Abstract Syntax Tree:
 the first is to record all variable declarations, the second is to record all
@@ -287,12 +292,13 @@ will be removed, as described in \fref{sec:dbmerge}.
 \subsubsection{Visiting Statements}
 \label{sec:visitstmt}
 When visiting statements, most statements are of no use to us. The only types
-of statements that are of interest to us, are statements that refer to variable
+of statements that are of interest to us, are those that refer to variable
 declarations (or field declarations). We record these references, so that when
 renaming a variable, we know what other parts of the code we need to change.
 
-When traversing statements, we only handle \lstinline|DeclRefExpr|s, and
-\lstinline|MemberExpr|s.
+When traversing statements, we only need to handle \lstinline|DeclRefExpr|s, and
+\lstinline|MemberExpr|s, as all other expressions that refer to variable
+declarations derive from these classes.
 
 In both cases, all we have to do is lookup the original declaration of the
 variable (or field) that the expression refers to, and add the current source
@@ -300,13 +306,13 @@ location to its set of occurences. In most cases, the declaration will be
 visited before the statement that refers to it, however there are two notable
 exceptions.
 
-The most obvious exception to this well-ordering is when we have a class that
-has a member function that refers to a member of the class that is defined
-before the member. In \CC{} the order of function definitions and members in a
-class defintion does not matter like it normally would, and Clang traverses
-these declarations and defintions roughly in the order they appear in the
-source-code. This means we may occur a reference to a field before we have
-managed to record the field itself.
+The most obvious exception to this ordering is when we have a class that has a
+member function that refers to a member of the class that is defined before the
+member. In \CC{} the order of function definitions and members in a class
+defintion does not matter like it normally would, and Clang traverses these
+declarations and defintions roughly in the order they appear in the source-code.
+This means we may occur a reference to a field before we have managed to record
+the field itself.
 
 The other --more subtle-- case where we may see a reference before a declaration
 is in the case of template functions whose signatures are only determined fully
@@ -337,10 +343,11 @@ Given a set of databases $input\_database_1, \ldots, input\_database_m$, we can
 construct the set of non-stale databases as follows:
 \begin{equation}
 	database_1, \ldots, database_n = \left \{
-		\substack {
-			input\_database_i \mid i \in \left \{ 1, \ldots, m \right \} \\
+			input\_database_i \middle|
+		\begin{subarray}{l}
+			i \in \left \{ 1, \ldots, m \right \} \\
 			\land exists(input\_database_i.filename)
-		}
+		\end{subarray}
 	\right \}
 \end{equation}
 where $exists(filename)$ determines whether the file exists.
@@ -367,12 +374,13 @@ merged variable as follows:
 		\[
 			\bigcup_{i=1}^{n}{
 				\left \{
-					\substack{
-						v.occurences \mid v \in database_i.variables \\
+					v.occurences \middle|
+					\begin{subarray}{l}
+						v \in database_i.variables \\
 						\land v.type = TYPE \\
 						\land v.name = NAME \\
 						\land v.location = LOCATION
-					}
+					\end{subarray}
 				\right \}
 			}
 		\]
@@ -419,8 +427,10 @@ so that we can rename occurences of a variable located in different files.
 
 Care must be taken when there are multiple references to a variable in the same
 line. If no two references occur in the same line, we can simply go to each
-location and change the line and change the old name to the new name, changing
-the length of the line as necessary. If there are multiple occurences in the
-same line however, changing the occurences left-to-right would invalidate the
-column index stored by the next occurence, so we have to perform each rename in
-the same line right-to-left.
+location and change the old name to the new name, changing the length of the
+line as necessary. If there are multiple occurences in the same line however,
+changing the occurences left-to-right would invalidate the column index stored
+by the next occurence, so we have to perform each rename in the same line
+right-to-left. This invalidation also means that we require the user to rebuild
+their project to update the databases so that another rename can then be
+performed.

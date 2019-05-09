@@ -67,7 +67,7 @@ apt-add-repository \
 \end{lstlisting}
 
 To help users on older distributions where the LLVM-7 packages may require
-packages which are not available, this project is also compatibl with Clang and
+packages which are not available, this project is also compatible with Clang and
 LLVM version 4.
 
 \subsubsection{\LaTeX{} packages required}
@@ -76,7 +76,8 @@ LLVM version 4.
 \end{itemize}
 
 \subsection{Building}
-Once the repository is cloned, setup a build directory and invoke meson.
+Once the git \cite{git} repository for this thesis project is cloned, setup a
+build directory and run meson.
 \begin{lstlisting}[language=bash]
 cd /path/to/repository
 mkdir build
@@ -102,8 +103,8 @@ $ export PATH=/path/to/repository/suggest_names:$PATH
 \section{Using}
 \subsection{Generating the Variable Database}
 Before any variable suggestions can be made, the source-code must be indexed.
-This is achieved with a clang-plugin, that collects all variable occurences,
-and information about them, such as type and name.
+This is achieved with a clang-plugin, which during compilation collects all
+variable occurences, and information about them such as their type and name.
 
 \subsubsection{Clang Invocation}
 To generate a database for a given source file, run clang as follows:
@@ -142,9 +143,9 @@ using the Clang-plugin as part of a build-system, as described next.
 \subsubsection{Build-System Integration}
 To generate the variable databases for a project larger than a few files,
 integration into the project's build-system is needed. As variable databases are
-generated per translation-unit, this means we have to change to way \CC{} files
-are compiled, namely that Clang is used as the compiler, and that our plugin is
-used during compilation.
+generated per translation-unit, this means we have to change to way the \CC{}
+files are compiled, namely that Clang is used as the compiler, and that our
+plugin is used during compilation.
 
 Several build-systems provide the option of the user to specify the compiler to
 be used, as well as additional compiler arguments. For CMake \cite{cmake}, these
@@ -192,8 +193,8 @@ information on the symbols in the program:
 
 By default, all paths in the output are absolute paths. To make the output more
 easily legible, we pass the \lstinline|-fdebug-prefix-map=/path/to/repository=.|
-command-line argument to Clang, so that the output files are relative the root
-of the repository.
+command-line argument to Clang, so that the output paths are relative to the
+root of the repository.
 
 \subsection{Generating Variable-name Suggestions}
 Once the code-base is indexed, suggestions can be requested with the script
@@ -261,9 +262,9 @@ found in \fref{appendix:vimplugindoc}.
 This section describes potential error messages the user may see during use of
 the tools described prior, and how to resolve them.
 
-\subsection{Variable not in merged database}
-If the user requests variable-names for a variable not present in the database,
-\lstinline|suggest_names| gives an error along the lines of:
+\subsection{Variable to suggest for is not in the database}
+If the user requests variable-names for a variable not present in any of the
+databases, \lstinline|suggest_names| gives an error along the lines of:
 
 \lstinputlisting[breaklines=true, caption=
 		{Trackback when requesting names for a variable not present}]

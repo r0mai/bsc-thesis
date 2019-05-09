@@ -16,7 +16,7 @@ def _find_corresponding_variable(variables, filename, line, column):
             if [line, column] == location_components[1:]:
                 return variable
     else:
-        raise ValueError('Variable to suggest for is not in merged database')
+        raise ValueError('Variable to suggest for is not in the databases')
 
 def print_suggestions(databasefiles, filename, line, column):
     databases = [
