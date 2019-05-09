@@ -35,11 +35,6 @@ test('robot', find_program('python3'),
                 robot],
         depends: dump_names)
 
-tex_vcs_tag = vcs_tag(
-        command: ['git', 'rev-parse', '--short', 'HEAD'],
-        input: 'tex/version.tex.in',
-        output: 'version.tex')
-
 tex_test_list_output = 'test_list.tex'
 tex_test_list = custom_target('Test List',
         command: [
@@ -218,7 +213,6 @@ thesis = custom_target('Thesis pdf',
         input: 'thesis.tex',
         output: 'thesis.pdf',
         depends: [
-            tex_vcs_tag,
             tex_test_list,
             apt_packages,
             llvm_ppa,
