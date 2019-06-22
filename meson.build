@@ -199,12 +199,21 @@ example_failure = custom_target('Example variable name suggestion failure',
         capture: true,
         output: 'example_failure')
 
+elte_logo = custom_target('ELTE logo pdf',
+        command: [
+                find_program('ps2pdf'),
+                '-dEPSCrop',
+                '@INPUT@',
+                '@OUTPUT@'
+        ],
+        input: 'img/elte_logo.eps',
+        output: 'elte_logo.pdf')
+
 thesis = custom_target('Thesis pdf',
         command: [
                 find_program('rubber'),
                 '--pdf',
                 '-I' + meson.source_root() / 'tex',
-                '-I' + meson.source_root() / 'img',
                 '-I' + meson.source_root() / 'vim' / 'doc',
                 '-I' + meson.current_build_dir(),
                 '--command', 'bibtex.path ' + meson.source_root() / 'tex',
@@ -213,6 +222,7 @@ thesis = custom_target('Thesis pdf',
         input: 'thesis.tex',
         output: 'thesis.pdf',
         depends: [
+            elte_logo,
             tex_test_list,
             apt_packages,
             llvm_ppa,
@@ -226,7 +236,6 @@ thesis = custom_target('Thesis pdf',
             schema,
             databasekeywords,
             files([
-                'img/elte_logo.eps',
                 'tex/titlepage.tex',
                 'tex/introduction.tex',
                 'tex/user_documentation.tex',
@@ -241,12 +250,11 @@ defense = custom_target('Defense pdf',
                 find_program('rubber'),
                 '--pdf',
                 '-I' + meson.source_root() / 'tex',
-                '-I' + meson.source_root() / 'img',
                 '-I' + meson.current_build_dir(),
                 '@INPUT@'],
         build_by_default: true,
         input: 'defense.tex',
         output: 'defense.pdf',
-        depend_files: [
-            'img/elte_logo.eps'
+        depends: [
+            elte_logo
         ])
