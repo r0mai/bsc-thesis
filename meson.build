@@ -235,3 +235,18 @@ thesis = custom_target('Thesis pdf',
                 'tex/summary.tex',
                 'tex/bibliography.bib',
                 'tex/appendix.tex'])])
+
+defense = custom_target('Defense pdf',
+        command: [
+                find_program('rubber'),
+                '--pdf',
+                '-I' + meson.source_root() / 'tex',
+                '-I' + meson.source_root() / 'img',
+                '-I' + meson.current_build_dir(),
+                '@INPUT@'],
+        build_by_default: true,
+        input: 'defense.tex',
+        output: 'defense.pdf',
+        depend_files: [
+            'img/elte_logo.eps'
+        ])
