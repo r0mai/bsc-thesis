@@ -1,12 +1,41 @@
-\documentclass{beamer}
+\documentclass[12pt]{beamer}
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
 \usepackage{lmodern}
 \usepackage[english]{babel}
 \usepackage{xparse}
 \usepackage{relsize}
+\usepackage{listings}
+\usepackage{textcomp}
+\usepackage{calc}
 
 \NewDocumentCommand{\CC}{m}{C\raisebox{.4ex}{\relsize{-3}{\textbf{++}}}}
+\defbeamertemplate{description item}{align left}{\insertdescriptionitem\hfill}
+\setbeamertemplate{description item}[align left]
+
+\newlength\listingnumberwidth
+\setlength\listingnumberwidth{\widthof{00} + 1em}
+\lstset{
+	basicstyle=\ttfamily\footnotesize,
+	stringstyle=\color{teal},
+	keywordstyle=\color{orange},
+	numberstyle=\color{gray},
+	showstringspaces=false,
+	showspaces=false,
+	columns=fixed,
+	xleftmargin=\listingnumberwidth
+}
+
+\lstdefinelanguage{json}{
+	morestring=[b]",
+	literate={\}\,}{\}, $\dots$}{4}
+}
+
+\makeatletter
+\newcommand*{\lstitem}[1][]{%
+\item[{\footnotesize\texttt#1}]
+}
+\makeatother
 
 \title{BSc. Thesis Defense}
 \subtitle{Clang-based Variable Name Suggestions for \CC{}}
@@ -16,9 +45,112 @@
 	Department of Programming Languages and Compilers}
 \date{June 28, 2019}
 \titlegraphic{\includegraphics[width=2cm]{elte_logo}}
+\logo{\includegraphics[width=1cm]{elte_logo}}
 
+\usetheme{AnnArbor}
+\usecolortheme{crane}
+\setbeamertemplate{headline}{}
 \begin{document}
+{
+	\setbeamertemplate{logo}{}
+	\begin{frame}
+		\titlepage
+	\end{frame}
+}
+\section{Introduction}
 \begin{frame}
-	\titlepage
+	\frametitle{Introduction}
+	\begin{itemize}
+		\item Naming variables is non-trivial
+		\item A good name is not obvious, but a bad one is
+		\item This thesis provides a tool for suggesting variable-names based on
+			types
+	\end{itemize}
 \end{frame}
+\subsection{Name-determining Types}
+\begin{frame}
+	\frametitle{Name-determining Types}
+
+	Certain types strongly determine the name of objects of that type:
+	\begin{description}[\footnotesize\texttt DatabaseConnection]
+		\lstitem[DatabaseConnection] \lstinline|databaseConnection|
+			\lstitem[parser\textscale{.5}{\textunderscore}t] \lstinline|parser|
+		\lstitem[Foo] \lstinline|foo|
+	\end{description}
+
+	Whereas other types do not:
+	\begin{description}[\footnotesize\texttt DatabaseConnection]
+		\lstitem[int]
+				\lstinline|fd|, \lstinline|rc|, \lstinline|offset|,
+				\lstinline|seconds\_since\_epoch|
+		\lstitem[void*]
+				\lstinline|cookie|, \lstinline|data|, \lstinline|ptr|
+		\lstitem[std::string]
+				\lstinline|name|, \lstinline|text|, \lstinline|input|,
+				\lstinline|buf|
+	\end{description}
+
+	We concern ourselves with name-determining types.
+\end{frame}
+\section{Overview}
+\begin{frame}
+	\frametitle{Overview of Solution}
+	\begin{enumerate}
+		\item Record variable information during compilation
+		\item Make suggestions
+		\item Automatically rename to suggestion
+	\end{enumerate}
+\end{frame}
+\section{Recording Variables}
+\begin{frame}
+	\frametitle{Recording Variables}
+	To do this, we add a plugin to Clang that records variable information and
+	saves it to a JSON.
+	\begin{columns}
+		\begin{column}{0.50\textwidth}
+			\lstinputlisting[label={lst:examplecpp}, language=c++, numbers=left]
+					{example.cpp}
+		\end{column}
+		\begin{column}{0.35\textwidth}
+			\lstset{breaklines=true}
+			\lstinline|clang++ -fplugin=libdump_names.so -c example.cpp|
+			\lstset{breaklines=false}
+
+			\textrightarrow example.cpp.o
+			\textrightarrow example.varnames.json
+		\end{column}
+	\end{columns}
+\end{frame}
+\subsection{Database format}
+\begin{frame}
+	\frametitle{Database Format}
+	\lstinputlisting[language=json, numbers=left, linerange={1-10,34-36}]{example.varnames.json}
+\end{frame}
+\section{Frontend Tools}
+\begin{frame}
+	\frametitle{Frontend Tools}
+
+	Name suggestions can be queried with \lstinline|suggest_names|:
+	\lstinline|suggest_names varnames.json ./example.cpp 2 9|:
+	\lstinputlisting{example_suggestions}
+
+	Whereas the rename can be performed with \lstinline|suggest_names_rename|:
+	\lstset{breaklines=true}
+	\lstinline|suggest_names_rename --filename="test.cpp" --line=2 --column=6 --name="identifier" varnames.json|
+	\lstset{breaklines=false}
+
+	CLI chosen for ease of integration into IDEs.
+\end{frame}
+\section{Demo}
+\begin{frame}
+	\frametitle{Live Demonstration}
+
+	For the live demonstration we shall use the VIM plugin to perform a rename
+	in Apache's Xerces-C project.
+
+	We shall see that in one case, a variable named \lstinline|retStream| should
+	probably be called \lstinline|retStrm| to follow the conventions.
+
+\end{frame}
+
 \end{document}
