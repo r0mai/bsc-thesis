@@ -256,5 +256,10 @@ defense = custom_target('Defense pdf',
         input: 'defense.tex',
         output: 'defense.pdf',
         depends: [
-            elte_logo
+            elte_logo,
+            example_varnames_json,
+            example_suggestions
+        ],
+        depend_files: [
+            files(['examples/example.cpp'])
         ])
