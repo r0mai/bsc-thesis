@@ -63,8 +63,10 @@
 	\begin{itemize}
 		\item Naming variables is non-trivial
 		\item A good name is not obvious, but a bad one is
-		\item This thesis provides a tool for suggesting variable-names based on
-			types
+		\item This thesis provides a tool for suggesting variable-names
+
+			Suggestions are based on the use of all other names for variables of
+			the same type.
 	\end{itemize}
 \end{frame}
 \subsection{Name-determining Types}
@@ -97,6 +99,12 @@
 	\frametitle{Overview of Solution}
 	\begin{enumerate}
 		\item Record variable information during compilation
+		\begin{itemize}
+			\item Name
+			\item Type
+			\item Location of declaration
+			\item Location of each occurence
+		\end{itemize}
 		\item Make suggestions
 		\item Automatically rename to suggestion
 	\end{enumerate}
@@ -139,7 +147,29 @@
 	\lstinline|suggest_names_rename --filename="test.cpp" --line=2 --column=6 --name="identifier" varnames.json|
 	\lstset{breaklines=false}
 
-	CLI chosen for ease of integration into IDEs.
+	CLI chosen for ease of integration into IDEs, but the primary user interface
+	will be via IDEs.
+\end{frame}
+
+\section{Future Work}
+\begin{frame}
+	\frametitle{Future Work}
+
+	Several features enhancements were identified but not implemented:
+	\begin{itemize}
+		\item More powerful suggestions
+			\begin{itemize}
+				\item Follow function calls
+				\item Understand type-transformations such as pluralization
+			\end{itemize}
+		\item Variable-name decoration awareness
+			\begin{description}[Function Arguments]
+				\item[Class-members] \lstinline|m_foo|, \lstinline|mFoo|
+				\item[Globals] \lstinline|g_foo|, \lstinline|Foo|
+				\item[Function Arguments] \lstinline|a_foo|, \lstinline|foo_|
+			\end{description}
+		\item Language-Server Protocol support
+	\end{itemize}
 \end{frame}
 \section{Demo}
 \begin{frame}
