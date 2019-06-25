@@ -28,7 +28,7 @@
 
 \lstdefinelanguage{json}{
 	morestring=[b]",
-	literate={\}\,}{\}, $\dots$}{4}
+	literate={\}\,}{\}, $\dots$}{4} {\],}{]}{1}
 }
 
 \makeatletter
@@ -124,15 +124,15 @@
 			\lstinline|clang++ -fplugin=libdump_names.so -c example.cpp|
 			\lstset{breaklines=false}
 
-			\textrightarrow example.cpp.o
+			\textrightarrow example.o
 			\textrightarrow example.varnames.json
 		\end{column}
 	\end{columns}
 \end{frame}
-\subsection{Database format}
+\subsection{Variable-list Format}
 \begin{frame}
-	\frametitle{Database Format}
-	\lstinputlisting[language=json, numbers=left, linerange={1-10,34-36}]{example.varnames.json}
+	\frametitle{Variable-list Format}
+	\lstinputlisting[language=json, numbers=left, linerange={1-10,34-34,36-36}]{example.varnames.json}
 \end{frame}
 \section{Frontend Tools}
 \begin{frame}
