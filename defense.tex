@@ -125,7 +125,7 @@
 			\lstset{breaklines=false}
 
 			\textrightarrow example.o
-			\textrightarrow example.varnames.json
+			\textrightarrow example.o.varnames.json
 		\end{column}
 	\end{columns}
 \end{frame}
@@ -139,12 +139,12 @@
 	\frametitle{Frontend Tools}
 
 	Name suggestions can be queried with \lstinline|suggest_names|:
-	\lstinline|suggest_names varnames.json ./example.cpp 2 9|:
+	\lstinline|suggest_names example.o.varnames.json example.cpp 2 9|:
 	\lstinputlisting{example_suggestions}
 
 	Whereas the rename can be performed with \lstinline|suggest_names_rename|:
 	\lstset{breaklines=true}
-	\lstinline|suggest_names_rename --filename="test.cpp" --line=2 --column=6 --name="identifier" varnames.json|
+	\lstinline|suggest_names_rename --filename="test.cpp" --line=2 --column=6 --name="identifier" example.o.varnames.json|
 	\lstset{breaklines=false}
 
 	CLI chosen for ease of integration into IDEs, but the primary user interface
