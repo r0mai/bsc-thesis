@@ -20,7 +20,7 @@ std::unique_ptr<clang::ASTConsumer> dn::Action::CreateASTConsumer(
 		llvm::StringRef in) {
 	auto currentFileName = getCurrentFileName(
 			in, ci.getSourceManager().getFileManager());
-	return std::make_unique<AstConsumer>(ci, currentFileName, outputFilename);
+	return llvm::make_unique<AstConsumer>(ci, currentFileName, outputFilename);
 }
 
 bool dn::Action::ParseArgs(const clang::CompilerInstance& ci,
