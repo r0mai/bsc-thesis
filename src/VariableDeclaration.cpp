@@ -27,6 +27,10 @@ std::string sourceLocationToString(
 		const clang::SourceManager& sourceManager) {
 	std::string fullPath;
 	auto presumedLocation = sourceManager.getPresumedLoc(location);
+	if (!presumedLocation.isValid()) {
+		std::cerr << "Invalid source location found" << std::endl;
+		return "null_location:0:0";
+	}
 	auto* file =
 			sourceManager.getFileEntryForID(sourceManager.getFileID(location));
 	if (file) {
