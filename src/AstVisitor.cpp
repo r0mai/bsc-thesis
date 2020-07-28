@@ -75,10 +75,9 @@ bool dn::AstVisitor::VisitDecl(clang::Decl* decl) {
 			visitFieldDeclaration(*fieldDecl);
 
 			VariableDeclaration variableDeclaration{*fieldDecl};
-			auto it = std::find(variableDeclarations.begin(),
-					variableDeclarations.end(), variableDeclaration);
-			assert(it != variableDeclarations.end());
-			addOccurence(*it, ctorInit->getSourceLocation());
+			auto key = variableDeclaration.getKey();
+			assert(variableDeclarations.count(key));
+			addOccurence(variableDeclarations.at(key), ctorInit->getSourceLocation());
 		}
 	}
 	return true;
@@ -92,11 +91,10 @@ void dn::AstVisitor::visitVariableDeclaration(
 	// visit the declaration then and there, so we cannot assume the declaration
 	// is new here.
 	VariableDeclaration variableDeclaration{varDecl};
-	auto it = std::find(
-			variableDeclarations.begin(), variableDeclarations.end(),
-			variableDeclaration);
+	auto key = variableDeclaration.getKey();
+	auto it = variableDeclarations.find(key);
 	if (it == variableDeclarations.end()) {
-		variableDeclarations.push_back(std::move(variableDeclaration));
+		variableDeclarations.insert(std::make_pair(key, std::move(variableDeclaration)));
 	}
 }
 
@@ -105,11 +103,10 @@ void dn::AstVisitor::visitFieldDeclaration(
 	// We'll register the field at the declaration or the first reference.
 	// Because of this, we cannot assume that the fieldDeclaration is new.
 	VariableDeclaration variableDeclaration{fieldDeclaration};
-	auto it = std::find(
-			variableDeclarations.begin(), variableDeclarations.end(),
-			variableDeclaration);
+	auto key = variableDeclaration.getKey();
+	auto it = variableDeclarations.find(key);
 	if (it == variableDeclarations.end()) {
-		variableDeclarations.push_back(std::move(variableDeclaration));
+		variableDeclarations.insert(std::make_pair(key, std::move(variableDeclaration)));
 	}
 }
 
@@ -119,10 +116,9 @@ void dn::AstVisitor::visitDeclarationReferenceExpression(
 	if (auto* varDecl = clang::dyn_cast<clang::VarDecl>(decl)) {
 		VariableDeclaration variableDeclaration{*varDecl};
 		visitVariableDeclaration(*varDecl);
-		auto it = std::find(variableDeclarations.begin(),
-				variableDeclarations.end(), variableDeclaration);
-		assert(it != variableDeclarations.end());
-		addOccurence(*it, declarationReferenceExpression.getLocation());
+		auto key = variableDeclaration.getKey();
+		assert(variableDeclarations.count(key));
+		addOccurence(variableDeclarations.at(key), declarationReferenceExpression.getLocation());
 	}
 }
 
@@ -135,10 +131,9 @@ void dn::AstVisitor::visitMemberExpression(const clang::MemberExpr&
 		// it's possible we encounter a reference before we encounter the
 		// declaration.
 		visitFieldDeclaration(*fieldDecl);
-		auto it = std::find(variableDeclarations.begin(),
-				variableDeclarations.end(), variableDeclaration);
-		assert(it != variableDeclarations.end());
-		addOccurence(*it, memberExpression.getExprLoc());
+		auto key = variableDeclaration.getKey();
+		assert(variableDeclarations.count(key));
+		addOccurence(variableDeclarations.at(key), memberExpression.getExprLoc());
 	} else if (clang::isa<clang::CXXMethodDecl>(decl)) {
 		// Ignore methods
 	} else if (clang::isa<clang::FunctionTemplateDecl>(decl)) {
@@ -173,7 +168,8 @@ void dn::AstVisitor::printVariableNames(const std::string& inputFile) const {
 	output << "{\n";
 	output << indent(4) << '"' << "Variables" << '"' << ": [";
 	bool first = true;
-	for (const auto& variableDeclaration: variableDeclarations) {
+	for (const auto& pair: variableDeclarations) {
+		auto& variableDeclaration = pair.second;
 		if (variableDeclaration.getName().empty()) {
 			continue; // Empty names are of no use to us.
 		}

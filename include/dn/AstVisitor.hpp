@@ -10,6 +10,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <map>
 
 namespace dn {
 
@@ -40,7 +41,7 @@ private:
 	const clang::SourceManager& sourceManager;
 	const std::map<std::string, std::string>& debugPrefixMap;
 
-	std::vector<VariableDeclaration> variableDeclarations;
+	std::map<VariableDeclKey, VariableDeclaration> variableDeclarations;
 };
 
 } // namespace dn

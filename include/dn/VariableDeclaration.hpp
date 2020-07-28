@@ -9,6 +9,14 @@
 
 namespace dn {
 
+struct VariableDeclKey {
+	std::string name;
+	std::string type;
+	clang::SourceLocation location;
+
+	bool operator<(const VariableDeclKey& other) const;
+};
+
 class VariableDeclaration {
 public:
 	VariableDeclaration(const clang::VarDecl&);
@@ -21,6 +29,8 @@ public:
 
 	void addOccurence(clang::SourceLocation location,
 			const clang::SourceManager& sourceManager);
+
+	VariableDeclKey getKey() const;
 
 private:
 	std::string name;

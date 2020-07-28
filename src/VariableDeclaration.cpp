@@ -44,6 +44,10 @@ std::string sourceLocationToString(
 }
 } // unnamed namespace
 
+bool dn::VariableDeclKey::operator<(const VariableDeclKey& other) const {
+	return std::tie(name, type, location) < std::tie(other.name, other.type, other.location);
+}
+
 dn::VariableDeclaration::VariableDeclaration(const clang::VarDecl& varDecl) :
 	name{varDecl.getNameAsString()},
 	type{varDecl.getType().getAsString()},
@@ -84,4 +88,12 @@ const std::vector<std::string>& dn::VariableDeclaration::getOccurences() const {
 void dn::VariableDeclaration::addOccurence(
 		clang::SourceLocation location, const clang::SourceManager& sourceManager) {
 	occurences.push_back(sourceLocationToString(location, sourceManager));
+}
+
+dn::VariableDeclKey dn::VariableDeclaration::getKey() const {
+	dn::VariableDeclKey key;
+	key.name = name;
+	key.type = type;
+	key.location = location;
+	return key;
 }
