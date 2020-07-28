@@ -1,5 +1,6 @@
 #include "dn/VariableDeclaration.hpp"
 #include <clang/Basic/SourceLocation.h>
+#include <clang/Basic/FileManager.h>
 
 #include <utility>
 #include <iostream>

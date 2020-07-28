@@ -1,5 +1,7 @@
 #include <dn/AstAction.hpp>
 
+#include <clang/Basic/FileManager.h>
+
 #include <iostream>
 #include <algorithm>
 
