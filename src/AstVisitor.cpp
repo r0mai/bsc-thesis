@@ -58,15 +58,28 @@ dn::AstVisitor::AstVisitor(std::string outputFile,
 }
 
 bool dn::AstVisitor::VisitDecl(clang::Decl* decl) {
-	auto* variableDeclaration = clang::dyn_cast<clang::VarDecl>(decl);
-	if (variableDeclaration) {
+	if (auto* variableDeclaration = clang::dyn_cast<clang::VarDecl>(decl)) {
 		visitVariableDeclaration(*variableDeclaration);
-		return true;
-	}
-	auto* fieldDeclaration = clang::dyn_cast<clang::FieldDecl>(decl);
-	if (fieldDeclaration) {
+	} else if (auto* fieldDeclaration = clang::dyn_cast<clang::FieldDecl>(decl)) {
 		visitFieldDeclaration(*fieldDeclaration);
-		return true;
+	} else if (auto* ctorDecl = clang::dyn_cast<clang::CXXConstructorDecl>(decl)) {
+		for (const clang::CXXCtorInitializer* ctorInit : ctorDecl->inits()) {
+			if (!ctorInit->isWritten()) {
+				continue;
+			}
+			if (!ctorInit->isMemberInitializer()) {
+				continue;
+			}
+			auto* fieldDecl = ctorInit->getMember();
+
+			visitFieldDeclaration(*fieldDecl);
+
+			VariableDeclaration variableDeclaration{*fieldDecl};
+			auto it = std::find(variableDeclarations.begin(),
+					variableDeclarations.end(), variableDeclaration);
+			assert(it != variableDeclarations.end());
+			addOccurence(*it, ctorInit->getSourceLocation());
+		}
 	}
 	return true;
 }
