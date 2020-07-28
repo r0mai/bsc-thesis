@@ -6,6 +6,7 @@
 #include <fstream>
 #include <iostream>
 #include <utility>
+#include <sstream>
 
 namespace {
 
@@ -25,6 +26,25 @@ std::string normalizeLocation(const std::string& location,
 		}
 	}
 	return location;
+}
+
+std::string escapeJsonString(const std::string& str) {
+	std::stringstream ss;
+
+	for (int i = 0; i < str.size(); ++i) {
+		char ch = str[i];
+		switch (ch) {
+			case '\"':
+			case '\\':
+				ss << '\\';
+			default:
+				ss << ch;
+				break;
+
+		}
+	}
+
+	return ss.str();
 }
 
 } // unnamed namespace
@@ -150,16 +170,16 @@ void dn::AstVisitor::printVariableNames(const std::string& inputFile) const {
 		first = false;
 		output << "\n" << indent(8) << "{\n";
 		output << indent(12)
-				<< "\"type\": " << '"' << variableDeclaration.getType() << '"'
+				<< "\"type\": " << '"' << escapeJsonString(variableDeclaration.getType()) << '"'
 				<< ",\n";
 		output << indent(12)
-				<< "\"name\": " << '"' << variableDeclaration.getName() << '"'
+				<< "\"name\": " << '"' << escapeJsonString(variableDeclaration.getName()) << '"'
 				<< ",\n";
 		output << indent(12)
 				<< "\"location\": " << '"'
-				<< normalizeLocation(
+				<< escapeJsonString(normalizeLocation(
 						variableDeclaration.getLocation(sourceManager),
-						debugPrefixMap) << '"'
+						debugPrefixMap)) << '"'
 				<< ",\n";
 		output << indent(12)
 				<< "\"occurences\": " << "[";
@@ -169,7 +189,7 @@ void dn::AstVisitor::printVariableNames(const std::string& inputFile) const {
 				output << ",";
 			}
 			output << "\n" << indent(16) << '"'
-					<< normalizeLocation(occurence, debugPrefixMap) << '"';
+					<< escapeJsonString(normalizeLocation(occurence, debugPrefixMap)) << '"';
 			firstOccurence = false;
 		}
 		output << "\n" << indent(12) << "]\n";
@@ -177,6 +197,6 @@ void dn::AstVisitor::printVariableNames(const std::string& inputFile) const {
 	}
 	output << "\n" << indent(4) << "],";
 	output << "\n" << indent(4) << "\"Filename\": " << "\""
-			<< normalizeLocation(inputFile, debugPrefixMap) << "\"";
+			<< escapeJsonString(normalizeLocation(inputFile, debugPrefixMap)) << "\"";
 	output << "\n}\n";
 }
